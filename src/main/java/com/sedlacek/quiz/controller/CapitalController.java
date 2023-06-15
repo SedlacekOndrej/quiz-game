@@ -36,6 +36,6 @@ public class CapitalController {
 
     @PostMapping("/submit")
     public ResponseEntity<PlayingResponseDto> submitAnswers(@RequestBody StatesAndAnswersDto statesAndAnswers) {
-        return capitalService.submitAnswers(statesAndAnswers);
+        return capitalService.getResults(statesAndAnswers);
     }
 }

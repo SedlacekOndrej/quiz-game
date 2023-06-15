@@ -26,30 +26,30 @@ public class CapitalService {
         this.userRepository = userRepository;
     }
 
-    public List<String> generateRandomStates(Map<String, String> continent) {
-        List<String> generatedStates = new ArrayList<>();
+    public List<String> getTenRandomStates(Map<String, String> continent) {
+        List<String> states = new ArrayList<>();
         List<String> statesFromChosenContinent = continent.keySet().stream().toList();
-        while (generatedStates.size() < 10) {
-            String generatedState = statesFromChosenContinent.get(random.nextInt(continent.size() - 1));
-            if (!generatedStates.contains(generatedState)) {
-                generatedStates.add(generatedState);
+        while (states.size() < 10) {
+            String state = statesFromChosenContinent.get(random.nextInt(continent.size() - 1));
+            if (!states.contains(state)) {
+                states.add(state);
             }
         }
-        return generatedStates;
+        return states;
     }
 
-    public List<String> generateQuestions(String state, Map<String, String> continent) {
-        List<String> generatedQuestions = new ArrayList<>();
-        generatedQuestions.add(continent.get(state));
+    public List<String> getFourCapitals(String state, Map<String, String> continent) {
+        List<String> capitals = new ArrayList<>();
+        capitals.add(continent.get(state));
         List<String> capitals = continent.values().stream().toList();
-        while (generatedQuestions.size() < 4) {
-            String generatedQuestion = capitals.get(random.nextInt(continent.size() - 1));
-            if (!generatedQuestions.contains(generatedQuestion)) {
-                generatedQuestions.add(generatedQuestion);
+        while (capitals.size() < 4) {
+            String capital = capitals.get(random.nextInt(continent.size() - 1));
+            if (!capitals.contains(capital)) {
+                capitals.add(capital);
             }
         }
-        Collections.shuffle(generatedQuestions);
-        return generatedQuestions;
+        Collections.shuffle(capitals);
+        return capitals;
     }
 
     public boolean rightAnswer(String state, String capital) {
@@ -92,16 +92,16 @@ public class CapitalService {
     }
 
     public ResponseEntity<QuestionsDto> getQuestions(Map<String, String> continent) {
-        List<String> generatedStates = generateRandomStates(continent);
-        List<String> generatedCities = new ArrayList<>();
+        List<String> generatedStates = getTenRandomStates(continent);
+        List<String> generatedCapitals = new ArrayList<>();
         for (String state: generatedStates) {
-            List<String> cities = generateQuestions(state, continent);
-            generatedCities.addAll(cities);
+            List<String> capitals = getFourCapitals(state, continent);
+            generatedCapitals.addAll(capitals);
         }
-        return ResponseEntity.ok(new QuestionsDto(generatedStates, generatedCities));
+        return ResponseEntity.ok(new QuestionsDto(generatedStates, generatedCapitals));
     }
 
-    public ResponseEntity<PlayingResponseDto> submitAnswers(StatesAndAnswersDto statesAndAnswers) {
+    public ResponseEntity<PlayingResponseDto> getResults(StatesAndAnswersDto statesAndAnswers) {
         switch (statesAndAnswers.getContinent()) {
             case "europe" -> chosenContinent = States.Europe;
             case "asia" -> chosenContinent = States.AsiaAndOceania;

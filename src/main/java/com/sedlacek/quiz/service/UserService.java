@@ -25,7 +25,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<ResponseMessageDto> registration(@NotNull UserDto userDTO) {
+    public ResponseEntity<ResponseMessageDto> registerNewUser(@NotNull UserDto userDTO) {
         if (userRepository.existsByUsername(userDTO.getUsername())) {
             return ResponseEntity.badRequest().body(new ResponseMessageDto("Účet s tímto uživatelským jménem již existuje"));
         }
@@ -38,13 +38,13 @@ public class UserService {
         return ResponseEntity.ok(new ResponseMessageDto("Uživatel " + userDTO.getUsername() + " úspěšně zaregistrován"));
     }
 
-    public ResponseEntity<List<UserDto>> getAllUsersByExp() {
+    public ResponseEntity<List<UserDto>> getAllUsersOrderByExp() {
         List<User> users = userRepository.findAllByOrderByExpDesc();
         List<UserDto> userDtos = users.stream().map(user -> EntityBase.convert(user, UserDto.class)).toList();
         return ResponseEntity.ok(userDtos);
     }
 
-    public ResponseEntity<LoginResponseDto> login(@NotNull UserDto userDto) {
+    public ResponseEntity<LoginResponseDto> loginUser(@NotNull UserDto userDto) {
         User user = userRepository.findByUsername(userDto.getUsername());
         if (user != null && encoder.matches(userDto.getPassword(), user.getPassword())) {
             UserDto responseUser = EntityBase.convert(user, UserDto.class);
@@ -53,7 +53,7 @@ public class UserService {
         return ResponseEntity.badRequest().body(new LoginResponseDto(null, "Špatné uživatelské jméno nebo heslo"));
     }
 
-    public ResponseEntity<UserDto> getUser(@NotNull long id) {
+    public ResponseEntity<UserDto> getUserById(@NotNull long id) {
         User user = userRepository.findById(id);
         return ResponseEntity.ok(EntityBase.convert(user, UserDto.class));
     }
