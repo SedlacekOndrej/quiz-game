@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatesAndAnswersDto {
+
     private String username;
     private String continent;
     private List<String> states;

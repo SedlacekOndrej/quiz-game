@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayingResponseDto {
+
     private long score;
     private List<String> failedStates;
     private List<String> succeededStates;

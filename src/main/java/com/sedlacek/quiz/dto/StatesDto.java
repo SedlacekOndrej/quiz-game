@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatesDto {
+
     private String state1;
     private String state2;
     private String state3;
@@ -23,19 +24,4 @@ public class StatesDto {
     private String state8;
     private String state9;
     private String state10;
-
-    public List<String> getStates() {
-        List<String> states = new ArrayList<>();
-        states.add(state1);
-        states.add(state2);
-        states.add(state3);
-        states.add(state4);
-        states.add(state5);
-        states.add(state6);
-        states.add(state7);
-        states.add(state8);
-        states.add(state9);
-        states.add(state10);
-        return states;
-    }
 }

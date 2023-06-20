@@ -14,6 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/capitals")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@SuppressWarnings("unused")
 public class CapitalController {
     private final CapitalService capitalService;
 

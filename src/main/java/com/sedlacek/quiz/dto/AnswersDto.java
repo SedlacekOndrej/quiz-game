@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswersDto {
+
     private String answer1;
     private String answer2;
     private String answer3;

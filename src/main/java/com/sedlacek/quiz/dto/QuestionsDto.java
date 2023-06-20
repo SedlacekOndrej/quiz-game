@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionsDto {
+
     private List<String> states;
     private List<String> cities;
 }
