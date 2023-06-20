@@ -38,6 +38,7 @@ public class Answer {
 
     public List<String> answeredCapitals() {
         List<String> capitals = new ArrayList<>();
+
         capitals.add(answer1);
         capitals.add(answer2);
         capitals.add(answer3);
@@ -48,6 +49,7 @@ public class Answer {
         capitals.add(answer8);
         capitals.add(answer9);
         capitals.add(answer10);
+
         return capitals;
     }
 }

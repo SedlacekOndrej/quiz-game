@@ -26,6 +26,7 @@ public class AnswersDto {
 
     public List<String> getAnswers() {
         List<String> capitals = new ArrayList<>();
+
         capitals.add(answer1);
         capitals.add(answer2);
         capitals.add(answer3);
@@ -36,6 +37,7 @@ public class AnswersDto {
         capitals.add(answer8);
         capitals.add(answer9);
         capitals.add(answer10);
+
         return capitals;
     }
 }

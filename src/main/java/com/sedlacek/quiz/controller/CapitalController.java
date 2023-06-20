@@ -24,6 +24,7 @@ public class CapitalController {
     @GetMapping("/{continent}")
     public ResponseEntity<QuestionsDto> getQuestions(@PathVariable (name = "continent") String chosenContinent) {
         Map<String, String> continent;
+
         switch (chosenContinent) {
             case "europe" -> continent = States.Europe;
             case "asia" -> continent = States.AsiaAndOceania;
@@ -31,6 +32,7 @@ public class CapitalController {
             case "africa" -> continent = States.Africa;
             default -> continent = new HashMap<>();
         }
+
         return capitalService.getQuestions(continent);
     }
 
