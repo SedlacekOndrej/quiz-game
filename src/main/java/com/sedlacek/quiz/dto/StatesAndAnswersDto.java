@@ -1,5 +1,6 @@
 package com.sedlacek.quiz.dto;
 
+import com.sedlacek.quiz.model.GameType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class StatesAndAnswersDto {
     private String continent;
     private List<String> states;
     private AnswersDto answers;
+    private GameType gameType;
 }

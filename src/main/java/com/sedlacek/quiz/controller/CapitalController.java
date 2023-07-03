@@ -3,13 +3,10 @@ package com.sedlacek.quiz.controller;
 import com.sedlacek.quiz.dto.PlayingResponseDto;
 import com.sedlacek.quiz.dto.QuestionsDto;
 import com.sedlacek.quiz.dto.StatesAndAnswersDto;
-import com.sedlacek.quiz.model.States;
+import com.sedlacek.quiz.model.GameType;
 import com.sedlacek.quiz.service.CapitalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/capitals")
@@ -22,16 +19,9 @@ public class CapitalController {
     }
 
     @GetMapping("/{continent}")
-    public ResponseEntity<QuestionsDto> getQuestions(@PathVariable (name = "continent") String chosenContinent) {
-        Map<String, String> continent;
-        switch (chosenContinent) {
-            case "europe" -> continent = States.Europe;
-            case "asia" -> continent = States.AsiaAndOceania;
-            case "america" -> continent = States.NorthAndSouthAmerica;
-            case "africa" -> continent = States.Africa;
-            default -> continent = new HashMap<>();
-        }
-        return capitalService.getQuestions(continent);
+    public ResponseEntity<QuestionsDto> getQuestions(@PathVariable (name = "continent") String continent,
+                                                     @RequestParam (name = "type") String gameType) {
+        return capitalService.getQuestions(continent, GameType.valueOf(gameType.toUpperCase()));
     }
 
     @PostMapping("/submit")

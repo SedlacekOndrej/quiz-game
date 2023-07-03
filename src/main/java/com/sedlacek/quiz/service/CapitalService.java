@@ -5,7 +5,9 @@ import com.sedlacek.quiz.dto.PlayingResponseDto;
 import com.sedlacek.quiz.dto.QuestionsDto;
 import com.sedlacek.quiz.dto.StatesAndAnswersDto;
 import com.sedlacek.quiz.entity.User;
-import com.sedlacek.quiz.model.States;
+import com.sedlacek.quiz.model.Flags;
+import com.sedlacek.quiz.model.GameType;
+import com.sedlacek.quiz.model.Capitals;
 import com.sedlacek.quiz.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -91,24 +93,20 @@ public class CapitalService {
         }
     }
 
-    public ResponseEntity<QuestionsDto> getQuestions(Map<String, String> continent) {
-        List<String> generatedStates = generateRandomStates(continent);
+    public ResponseEntity<QuestionsDto> getQuestions(String continent, GameType gameType) {
+        continentSelection(continent, gameType);
+        List<String> generatedStates = generateRandomStates(chosenContinent);
         List<String> generatedCities = new ArrayList<>();
+
         for (String state: generatedStates) {
-            List<String> cities = generateQuestions(state, continent);
+            List<String> cities = generateQuestions(state, chosenContinent);
             generatedCities.addAll(cities);
         }
-        return ResponseEntity.ok(new QuestionsDto(generatedStates, generatedCities));
+        return ResponseEntity.ok(new QuestionsDto(generatedStates, generatedCities, gameType));
     }
 
     public ResponseEntity<PlayingResponseDto> submitAnswers(StatesAndAnswersDto statesAndAnswers) {
-        switch (statesAndAnswers.getContinent()) {
-            case "europe" -> chosenContinent = States.Europe;
-            case "asia" -> chosenContinent = States.AsiaAndOceania;
-            case "america" -> chosenContinent = States.NorthAndSouthAmerica;
-            case "africa" -> chosenContinent = States.Africa;
-            default -> chosenContinent = new HashMap<>();
-        }
+        continentSelection(statesAndAnswers.getContinent(), statesAndAnswers.getGameType());
         User user = userRepository.findByUsername(statesAndAnswers.getUsername());
         playTheQuiz(statesAndAnswers.getAnswers(), statesAndAnswers.getStates(), user);
         user.addExp(score * 10);
@@ -116,5 +114,26 @@ public class CapitalService {
         user.levelCheck();
         userRepository.save(user);
         return ResponseEntity.ok(new PlayingResponseDto(score, failedStates, succeededStates));
+    }
+
+    private void continentSelection(String continent, GameType gameType) {
+        if (gameType.equals(GameType.CAPITALS)) {
+            switch (continent) {
+                case "europe" -> chosenContinent = Capitals.Europe;
+                case "asia" -> chosenContinent = Capitals.AsiaAndOceania;
+                case "america" -> chosenContinent = Capitals.NorthAndSouthAmerica;
+                case "africa" -> chosenContinent = Capitals.Africa;
+                default -> chosenContinent = new HashMap<>();
+            }
+        }
+        if (gameType.equals(GameType.FLAGS)) {
+            switch (continent) {
+                case "europe" -> chosenContinent = Flags.Europe;
+                case "asia" -> chosenContinent = Flags.AsiaAndOceania;
+                case "america" -> chosenContinent = Flags.NorthAndSouthAmerica;
+                case "africa" -> chosenContinent = Flags.Africa;
+                default -> chosenContinent = new HashMap<>();
+            }
+        }
     }
 }
