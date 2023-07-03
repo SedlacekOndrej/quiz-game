@@ -2,9 +2,9 @@ package com.sedlacek.quiz.model;
 
 import java.util.Map;
 
-public class States {
+public class Capitals {
 
-    private States() {}
+    private Capitals() {}
 
     public static final Map<String, String> Europe = Map.ofEntries(
             Map.entry("Albánie", "Tirana"),
