@@ -15,6 +15,7 @@ import java.util.List;
 @Table(name = "users")
 @NoArgsConstructor
 public class User extends EntityBase {
+
     private String username;
     private String password;
     private String email;

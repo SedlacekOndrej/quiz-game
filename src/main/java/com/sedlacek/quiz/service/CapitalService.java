@@ -16,10 +16,11 @@ import java.util.*;
 
 @Service
 public class CapitalService {
+
     Random random = new Random();
     private Map<String, String> chosenContinent;
     private List<String> failedStates;
-    private List<String> succeededStates;
+    private List<String> correctStates;
     private long score;
     private final UserRepository userRepository;
 
@@ -28,30 +29,36 @@ public class CapitalService {
         this.userRepository = userRepository;
     }
 
-    public List<String> generateRandomStates(Map<String, String> continent) {
-        List<String> generatedStates = new ArrayList<>();
-        List<String> statesFromChosenContinent = continent.keySet().stream().toList();
-        while (generatedStates.size() < 10) {
-            String generatedState = statesFromChosenContinent.get(random.nextInt(continent.size() - 1));
-            if (!generatedStates.contains(generatedState)) {
-                generatedStates.add(generatedState);
+    public List<String> getTenRandomStates(Map<String, String> continent) {
+        List<String> allStatesFromContinent = continent.keySet().stream().toList();
+        List<String> states = new ArrayList<>();
+
+        while (states.size() < 10) {
+            String state = allStatesFromContinent.get(random.nextInt(continent.size() - 1));
+            if (!states.contains(state)) {
+                states.add(state);
             }
         }
-        return generatedStates;
+
+        return states;
     }
 
-    public List<String> generateQuestions(String state, Map<String, String> continent) {
-        List<String> generatedQuestions = new ArrayList<>();
-        generatedQuestions.add(continent.get(state));
-        List<String> capitals = continent.values().stream().toList();
-        while (generatedQuestions.size() < 4) {
-            String generatedQuestion = capitals.get(random.nextInt(continent.size() - 1));
-            if (!generatedQuestions.contains(generatedQuestion)) {
-                generatedQuestions.add(generatedQuestion);
+    public List<String> getFourCapitals(String state, Map<String, String> continent) {
+        List<String> allCapitalsFromContinent = continent.values().stream().toList();
+        List<String> capitals = new ArrayList<>();
+
+        capitals.add(continent.get(state));
+
+        while (capitals.size() < 4) {
+            String capital = allCapitalsFromContinent.get(random.nextInt(continent.size() - 1));
+            if (!capitals.contains(capital)) {
+                capitals.add(capital);
             }
         }
-        Collections.shuffle(generatedQuestions);
-        return generatedQuestions;
+
+        Collections.shuffle(capitals);
+
+        return capitals;
     }
 
     public boolean rightAnswer(String state, String capital) {
@@ -62,34 +69,40 @@ public class CapitalService {
         if (failedStates == null) {
             failedStates = new ArrayList<>();
         }
+
         return failedStates;
     }
 
-    private List<String> getSucceededStates() {
-        if (succeededStates == null) {
-            succeededStates = new ArrayList<>();
+    private List<String> getCorrectStates() {
+        if (correctStates == null) {
+            correctStates = new ArrayList<>();
         }
-        return succeededStates;
+
+        return correctStates;
     }
 
     public void playTheQuiz(AnswersDto answers, List<String> states, User user) {
         score = 0;
-        int index = 0;
         getFailedStates().clear();
-        getSucceededStates().clear();
-        for (String state : states) {
-            if (answers.getAnswers().get(index) == null) {
-                answers.getAnswers().set(index, "");
+        getCorrectStates().clear();
+
+        for (int i = 0; i < states.size(); i++) {
+            String state = states.get(i);
+            String answer = answers.getAnswers().get(i);
+
+            if (answer == null) {
+                answer = "";
+                answers.getAnswers().set(i, answer);
             }
-            if (rightAnswer(chosenContinent.get(state), answers.getAnswers().get(index))) {
+
+            if (rightAnswer(chosenContinent.get(state), answer)) {
                 user.addRightAnswer();
-                succeededStates.add(state);
+                correctStates.add(state);
                 score++;
             } else {
                 user.addWrongAnswer();
                 failedStates.add(state);
             }
-            index++;
         }
     }
 
@@ -113,7 +126,8 @@ public class CapitalService {
         user.countPercentage();
         user.levelCheck();
         userRepository.save(user);
-        return ResponseEntity.ok(new PlayingResponseDto(score, failedStates, succeededStates));
+
+        return ResponseEntity.ok(new PlayingResponseDto(score, failedStates, correctStates));
     }
 
     private void continentSelection(String continent, GameType gameType) {

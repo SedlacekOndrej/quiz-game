@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/capitals")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@SuppressWarnings("unused")
 public class CapitalController {
     private final CapitalService capitalService;
 
@@ -26,6 +27,6 @@ public class CapitalController {
 
     @PostMapping("/submit")
     public ResponseEntity<PlayingResponseDto> submitAnswers(@RequestBody StatesAndAnswersDto statesAndAnswers) {
-        return capitalService.submitAnswers(statesAndAnswers);
+        return capitalService.getResults(statesAndAnswers);
     }
 }
