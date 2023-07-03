@@ -117,7 +117,7 @@ public class CapitalService {
     }
 
     private void continentSelection(String continent, GameType gameType) {
-        if (gameType.equals(GameType.CAPITALS)) {
+        if (gameType == GameType.CAPITALS) {
             switch (continent) {
                 case "europe" -> chosenContinent = Capitals.Europe;
                 case "asia" -> chosenContinent = Capitals.AsiaAndOceania;
@@ -126,7 +126,7 @@ public class CapitalService {
                 default -> chosenContinent = new HashMap<>();
             }
         }
-        if (gameType.equals(GameType.FLAGS)) {
+        if (gameType == GameType.FLAGS) {
             switch (continent) {
                 case "europe" -> chosenContinent = Flags.Europe;
                 case "asia" -> chosenContinent = Flags.AsiaAndOceania;

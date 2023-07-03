@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Game {
+public class Game extends EntityBase {
 
     private GameType gameType;
     private User user;
