@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/capitals")
+@RequestMapping("/api/game")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @SuppressWarnings("unused")
 public class CapitalController {
