@@ -2,6 +2,7 @@ package com.sedlacek.quiz.entity;
 
 import com.sedlacek.quiz.model.GameType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,13 +17,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Game {
+public class Game extends EntityBase {
 
     private GameType gameType;
-    private User user;
     private int score;
     private int gameTime;
     private List<String> questions;
+    private List<String> possibleAnswers;
     private List<String> answers;
+    @ManyToOne
+    private User user;
 
 }

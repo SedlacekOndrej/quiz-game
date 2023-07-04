@@ -1,5 +1,6 @@
 package com.sedlacek.quiz.dto;
 
+import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.model.GameType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,10 +13,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatesAndAnswersDto {
-    private String username;
-    private String continent;
-    private List<String> states;
-    private AnswersDto answers;
+public class GameDto {
     private GameType gameType;
+    private User user;
+    private int score;
+    private int gameTime;
+    private List<String> questions;
+    private List<String> possibleAnswers;
+    private List<String> answers;
 }
