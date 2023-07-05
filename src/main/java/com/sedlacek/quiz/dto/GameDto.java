@@ -1,6 +1,5 @@
 package com.sedlacek.quiz.dto;
 
-import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.model.GameType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
