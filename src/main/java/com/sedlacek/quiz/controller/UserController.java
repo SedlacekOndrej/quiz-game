@@ -13,6 +13,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 @RequestMapping("/api/user")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@SuppressWarnings("unused")
 public class UserController {
     private final UserService userService;
 
@@ -22,22 +23,22 @@ public class UserController {
 
     @PostMapping("/registration")
     public ResponseEntity<ResponseMessageDto> registerUser(@RequestBody UserDto userDto) {
-        return userService.registration(userDto);
+        return userService.registerNewUser(userDto);
     }
 
     @GetMapping("/leaderboards")
     public ResponseEntity<List<UserDto>> getLeaderboards() {
-        return userService.getAllUsersByExp();
+        return userService.getAllUsersOrderByExp();
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> loginUser(@RequestBody UserDto userDto) {
-        return userService.login(userDto);
+        return userService.loginUser(userDto);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable (name = "id") long id) {
-        return userService.getUser(id);
+        return userService.getUserById(id);
     }
 }
 

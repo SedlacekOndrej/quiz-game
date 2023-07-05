@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends EntityBase {
+
     private String username;
     private String password;
     private String email;

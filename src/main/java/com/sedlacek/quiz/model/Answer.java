@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Answer {
+
     private String answer1;
     private String answer2;
     private String answer3;

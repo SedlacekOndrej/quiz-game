@@ -14,6 +14,7 @@ import java.time.OffsetDateTime;
 @MappedSuperclass
 @Getter
 public abstract class EntityBase implements Serializable {
+
     private static final ModelMapper mapper = new ModelMapper();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
