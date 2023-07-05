@@ -79,7 +79,6 @@ public class GameService {
     public void playTheQuiz(AnswersDto answers, List<String> questions, User user, GameType gameType) {
         score = 0;
         int index = 0;
-        game = new Game();
         game.setUser(user);
         getFailedQuestions().clear();
         getSucceededQuestions().clear();
@@ -108,20 +107,23 @@ public class GameService {
 
     public ResponseEntity<QuestionsDto> getQuestions(String continent, GameType gameType) {
         continentSelection(continent, gameType);
+        game = new Game();
         game.setQuestions(generateTenQuestions(chosenContinent));
+        List<String> allPossibleAnswers = new ArrayList<>();
 
         for (String question: game.getQuestions()) {
             List<String> possibleAnswers = generateFourPossibleAnswers(question, chosenContinent);
-            game.getPossibleAnswers().addAll(possibleAnswers);
+            allPossibleAnswers.addAll(possibleAnswers);
         }
-        return ResponseEntity.ok(new QuestionsDto(game.getQuestions(), game.getPossibleAnswers(), gameType));
+        return ResponseEntity.ok(new QuestionsDto(game.getQuestions(), allPossibleAnswers, gameType));
     }
 
     public ResponseEntity<PlayingResponseDto> submitAnswers(QuestionsAndAnswersDto questionsAndAnswers) {
-        continentSelection(questionsAndAnswers.getContinent(), questionsAndAnswers.getGameType());
+        GameType gameType = GameType.valueOf(questionsAndAnswers.getGameType());
+        continentSelection(questionsAndAnswers.getContinent(), gameType);
         User user = userRepository.findByUsername(questionsAndAnswers.getUsername());
-        playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getStates(), user, questionsAndAnswers.getGameType());
-        game.setGameType(questionsAndAnswers.getGameType());
+        playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getStates(), user, gameType);
+        game.setGameType(gameType);
         game.setGameTime(questionsAndAnswers.getGameTime());
         game.setAnswers(questionsAndAnswers.getAnswers().getAnswers());
         user.addExp(score * 10L);

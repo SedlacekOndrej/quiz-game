@@ -17,6 +17,6 @@ public class QuestionsAndAnswersDto {
     private String continent;
     private List<String> states;
     private AnswersDto answers;
-    private GameType gameType;
+    private String gameType;
     private int gameTime;
 }
