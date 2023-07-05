@@ -6,14 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionsDto {
-    private List<String> questions;
-    private List<String> possibleAnswers;
+public class GameDto {
+    private OffsetDateTime createdDate;
     private GameType gameType;
+    private int score;
+    private int gameTime;
+    private List<String> questions;
+    private List<String> answers;
 }

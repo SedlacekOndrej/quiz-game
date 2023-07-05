@@ -11,9 +11,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatesAndAnswersDto {
+public class QuestionsAndAnswersDto {
     private String username;
     private String continent;
     private List<String> states;
     private AnswersDto answers;
+    private String gameType;
+    private int gameTime;
 }
