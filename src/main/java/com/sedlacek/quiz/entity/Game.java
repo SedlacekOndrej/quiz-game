@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,8 +24,22 @@ public class Game extends EntityBase {
     private int score;
     private int gameTime;
     private List<String> questions;
+    private List<String> possibleAnswers;
     private List<String> answers;
+    private List<String> succeededQuestions = new ArrayList<>();
+    private List<String> failedQuestions = new ArrayList<>();
     @ManyToOne
     private User user;
 
+    public void addFailedQuestion(String question) {
+        this.failedQuestions.add(question);
+    }
+
+    public void addSucceededQuestion(String question) {
+        this.succeededQuestions.add(question);
+    }
+
+    public void incrementScore() {
+        this.score++;
+    }
 }

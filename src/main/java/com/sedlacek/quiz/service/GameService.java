@@ -18,9 +18,6 @@ import java.util.*;
 public class GameService {
     Random random = new Random();
     private Map<String, String> chosenContinent;
-    private List<String> failedQuestions;
-    private List<String> succeededQuestions;
-    private int score;
     private Game game;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
@@ -61,26 +58,12 @@ public class GameService {
         return answer.equals(question);
     }
 
-    private List<String> getFailedQuestions() {
-        if (failedQuestions == null) {
-            failedQuestions = new ArrayList<>();
-        }
-        return failedQuestions;
-    }
-
-    private List<String> getSucceededQuestions() {
-        if (succeededQuestions == null) {
-            succeededQuestions = new ArrayList<>();
-        }
-        return succeededQuestions;
-    }
-
     public void playTheQuiz(AnswersDto answers, List<String> questions, User user, GameType gameType) {
-        score = 0;
+        game.setScore(0);
         int index = 0;
         game.setUser(user);
-        getFailedQuestions().clear();
-        getSucceededQuestions().clear();
+        game.getFailedQuestions().clear();
+        game.getSucceededQuestions().clear();
         for (String question : questions) {
             if (answers.getAnswers().get(index) == null) {
                 answers.getAnswers().set(index, "");
@@ -88,33 +71,33 @@ public class GameService {
             if (rightAnswer(chosenContinent.get(question), answers.getAnswers().get(index))) {
                 user.addRightAnswer();
                 switch (gameType) {
-                    case CAPITALS -> succeededQuestions.add(question);
-                    case FLAGS -> succeededQuestions.add(answers.getAnswers().get(index));
+                    case CAPITALS -> game.addSucceededQuestion(question);
+                    case FLAGS -> game.addSucceededQuestion(answers.getAnswers().get(index));
                 }
-                score++;
+                game.incrementScore();
             } else {
                 user.addWrongAnswer();
                 switch (gameType) {
-                    case CAPITALS -> failedQuestions.add(question);
-                    case FLAGS -> failedQuestions.add(answers.getAnswers().get(index));
+                    case CAPITALS -> game.addFailedQuestion(question);
+                    case FLAGS -> game.addFailedQuestion(answers.getAnswers().get(index));
                 }
             }
             index++;
         }
-        game.setScore(score);
+        user.addExp(game.getScore() * 10L);
     }
 
     public ResponseEntity<QuestionsDto> getQuestions(String continent, GameType gameType) {
         continentSelection(continent, gameType);
         game = new Game();
         game.setQuestions(generateTenQuestions(chosenContinent));
-        List<String> allPossibleAnswers = new ArrayList<>();
+        game.setPossibleAnswers(new ArrayList<>());
 
         for (String question: game.getQuestions()) {
             List<String> possibleAnswers = generateFourPossibleAnswers(question, chosenContinent);
-            allPossibleAnswers.addAll(possibleAnswers);
+            game.getPossibleAnswers().addAll(possibleAnswers);
         }
-        return ResponseEntity.ok(new QuestionsDto(game.getQuestions(), allPossibleAnswers, gameType));
+        return ResponseEntity.ok(new QuestionsDto(game.getQuestions(), game.getPossibleAnswers(), gameType));
     }
 
     public ResponseEntity<PlayingResponseDto> submitAnswers(QuestionsAndAnswersDto questionsAndAnswers) {
@@ -122,16 +105,18 @@ public class GameService {
         continentSelection(questionsAndAnswers.getContinent(), gameType);
         User user = userRepository.findByUsername(questionsAndAnswers.getUsername());
         playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getStates(), user, gameType);
+
         game.setGameType(gameType);
         game.setGameTime(questionsAndAnswers.getGameTime());
         game.setAnswers(questionsAndAnswers.getAnswers().getAnswers());
-        user.addExp(score * 10L);
+
         user.countPercentage();
         user.levelCheck();
         user.addGame(game);
+
         userRepository.save(user);
         gameRepository.save(game);
-        return ResponseEntity.ok(new PlayingResponseDto(score, failedQuestions, succeededQuestions));
+        return ResponseEntity.ok(new PlayingResponseDto(game.getScore(), game.getFailedQuestions(), game.getSucceededQuestions()));
     }
 
     public ResponseEntity<List<GameDto>> getAllGamesHistory() {

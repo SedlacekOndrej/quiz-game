@@ -26,19 +26,19 @@ public class AnswersDto {
     private String answer10;
 
     public List<String> getAnswers() {
-        List<String> capitals = new ArrayList<>();
+        List<String> answers = new ArrayList<>();
 
-        capitals.add(answer1);
-        capitals.add(answer2);
-        capitals.add(answer3);
-        capitals.add(answer4);
-        capitals.add(answer5);
-        capitals.add(answer6);
-        capitals.add(answer7);
-        capitals.add(answer8);
-        capitals.add(answer9);
-        capitals.add(answer10);
+        answers.add(answer1);
+        answers.add(answer2);
+        answers.add(answer3);
+        answers.add(answer4);
+        answers.add(answer5);
+        answers.add(answer6);
+        answers.add(answer7);
+        answers.add(answer8);
+        answers.add(answer9);
+        answers.add(answer10);
 
-        return capitals;
+        return answers;
     }
 }
