@@ -4,6 +4,7 @@ import com.sedlacek.quiz.model.GameType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "games")
@@ -21,6 +23,8 @@ import java.util.List;
 public class Game extends EntityBase {
 
     private GameType gameType;
+    @Transient
+    private Map<String, String> continent;
     private int score;
     private int gameTime;
     private List<String> questions;
