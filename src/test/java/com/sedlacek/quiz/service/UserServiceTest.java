@@ -3,12 +3,10 @@ package com.sedlacek.quiz.service;
 import com.sedlacek.quiz.dto.LoginResponseDto;
 import com.sedlacek.quiz.dto.ResponseMessageDto;
 import com.sedlacek.quiz.dto.UserDto;
-import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.OffsetDateTime;
