@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -91,5 +92,32 @@ class UserServiceTest {
         userService.registerNewUser(user);
 
         assertEquals(userService.getUserById(user.getId()), ResponseEntity.ok(user));
+    }
+
+    @Test
+    void getAllUsersOrderByExp_Ok() {
+        userService.registerNewUser(user);
+
+        UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "NewUser", "password456", "NewUser@gmail.com",
+                1, 10L, 0, 0, 0.00, new ArrayList<>());
+
+        userService.registerNewUser(newUser);
+
+        List<UserDto> users = userService.getAllUsersOrderByExp().getBody();
+
+        assert users != null;
+
+        assertEquals(2, users.size());
+
+        assertEquals("NewUser", users.get(0).getUsername());
+    }
+
+    @Test
+    void getAllUsersOrderByExp_ListIsEmpty_True() {
+        List<UserDto> users = userService.getAllUsersOrderByExp().getBody();
+
+        assert users != null;
+
+        assertEquals(0, users.size());
     }
 }
