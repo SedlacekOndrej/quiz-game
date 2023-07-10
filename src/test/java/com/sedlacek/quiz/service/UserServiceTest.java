@@ -36,20 +36,20 @@ class UserServiceTest {
 
     @Test
     void registerNewUser_UsernameAlreadyExists_StatusBadRequest() {
+        userService.registerNewUser(user);
+
         UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "TestUser", "password123", "NewTestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
-
-        userService.registerNewUser(user);
 
         assertEquals(userService.registerNewUser(newUser), ResponseEntity.badRequest().body(new ResponseMessageDto("Účet s tímto uživatelským jménem již existuje")));
     }
 
     @Test
     void registerNewUser_EmailAlreadyExists_StatusBadRequest() {
+        userService.registerNewUser(user);
+
         UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "NewTestUser", "password123", "TestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
-
-        userService.registerNewUser(user);
 
         assertEquals(userService.registerNewUser(newUser), ResponseEntity.badRequest().body(new ResponseMessageDto("Účet s tímto emailem již existuje")));
     }
