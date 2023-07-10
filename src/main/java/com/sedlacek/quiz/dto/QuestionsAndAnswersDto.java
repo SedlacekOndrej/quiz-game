@@ -14,7 +14,7 @@ import java.util.List;
 public class QuestionsAndAnswersDto {
     private String username;
     private String continent;
-    private List<String> states;
+    private List<String> questions;
     private AnswersDto answers;
     private String gameType;
     private int gameTime;

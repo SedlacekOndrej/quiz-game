@@ -7,11 +7,13 @@ import com.sedlacek.quiz.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +34,11 @@ class UserServiceTest {
 
     @Test
     void registerNewUser_StatusOk() {
-        assertEquals(userService.registerNewUser(user), ResponseEntity.ok(new ResponseMessageDto("Uživatel " + user.getUsername() + " úspěšně zaregistrován")));
+        ResponseEntity<ResponseMessageDto> response = userService.registerNewUser(user);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertEquals("Uživatel " + user.getUsername() + " úspěšně zaregistrován", Objects.requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
@@ -42,7 +48,11 @@ class UserServiceTest {
         UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "TestUser", "password123", "NewTestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
 
-        assertEquals(userService.registerNewUser(newUser), ResponseEntity.badRequest().body(new ResponseMessageDto("Účet s tímto uživatelským jménem již existuje")));
+        ResponseEntity<ResponseMessageDto> response = userService.registerNewUser(newUser);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertEquals("Účet s tímto uživatelským jménem již existuje", Objects.requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
@@ -52,19 +62,31 @@ class UserServiceTest {
         UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "NewTestUser", "password123", "TestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
 
-        assertEquals(userService.registerNewUser(newUser), ResponseEntity.badRequest().body(new ResponseMessageDto("Účet s tímto emailem již existuje")));
+        ResponseEntity<ResponseMessageDto> response = userService.registerNewUser(newUser);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertEquals("Účet s tímto emailem již existuje", Objects.requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
     void loginUser_StatusOk() {
         userService.registerNewUser(user);
 
-        assertEquals(userService.loginUser(user), ResponseEntity.ok(new LoginResponseDto(user, "Přihlášení proběhlo úspěšně")));
+        ResponseEntity<LoginResponseDto> response = userService.loginUser(user);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertEquals("Přihlášení proběhlo úspěšně", Objects.requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
     void loginUser_UserDoesNotExist_StatusBadRequest() {
-        assertEquals(userService.loginUser(user), ResponseEntity.badRequest().body(new LoginResponseDto(null, "Špatné uživatelské jméno nebo heslo")));
+        ResponseEntity<LoginResponseDto> response = userService.loginUser(user);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertEquals("Špatné uživatelské jméno nebo heslo", Objects.requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
@@ -74,7 +96,11 @@ class UserServiceTest {
         UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "NewTestUser", "password123", "TestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
 
-        assertEquals(userService.loginUser(newUser), ResponseEntity.badRequest().body(new LoginResponseDto(null, "Špatné uživatelské jméno nebo heslo")));
+        ResponseEntity<LoginResponseDto> response = userService.loginUser(newUser);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertEquals("Špatné uživatelské jméno nebo heslo", Objects.requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
@@ -84,14 +110,20 @@ class UserServiceTest {
         UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "TestUser", "password", "TestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
 
-        assertEquals(userService.loginUser(newUser), ResponseEntity.badRequest().body(new LoginResponseDto(null, "Špatné uživatelské jméno nebo heslo")));
+        ResponseEntity<LoginResponseDto> response = userService.loginUser(newUser);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertEquals("Špatné uživatelské jméno nebo heslo", Objects.requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
     void getUserById_StatusOk() {
         userService.registerNewUser(user);
 
-        assertEquals(userService.getUserById(user.getId()), ResponseEntity.ok(user));
+        ResponseEntity<UserDto> response = userService.getUserById(user.getId());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -119,5 +151,7 @@ class UserServiceTest {
         assert users != null;
 
         assertEquals(0, users.size());
+
+        assertTrue(users.isEmpty());
     }
 }

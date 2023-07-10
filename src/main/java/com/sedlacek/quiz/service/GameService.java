@@ -53,8 +53,8 @@ public class GameService {
         return possibleAnswers;
     }
 
-    public boolean rightAnswer(String question, String answer) {
-        return answer.equals(question);
+    public boolean rightAnswer(Map<String,String> continent, String question, String answer) {
+        return answer.equals(continent.get(question));
     }
 
     public void playTheQuiz(AnswersDto answers, List<String> questions, User user, GameType gameType) {
@@ -67,7 +67,7 @@ public class GameService {
             if (answers.getAnswers().get(index) == null) {
                 answers.getAnswers().set(index, "");
             }
-            if (rightAnswer(game.getContinent().get(question), answers.getAnswers().get(index))) {
+            if (rightAnswer(game.getContinent(), question, answers.getAnswers().get(index))) {
                 user.addRightAnswer();
                 switch (gameType) {
                     case CAPITALS -> game.addSucceededQuestion(question);
@@ -103,7 +103,7 @@ public class GameService {
         GameType gameType = GameType.valueOf(questionsAndAnswers.getGameType());
         continentSelection(questionsAndAnswers.getContinent(), gameType);
         User user = userRepository.findByUsername(questionsAndAnswers.getUsername());
-        playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getStates(), user, gameType);
+        playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getQuestions(), user, gameType);
 
         game.setGameType(gameType);
         game.setGameTime(questionsAndAnswers.getGameTime());
