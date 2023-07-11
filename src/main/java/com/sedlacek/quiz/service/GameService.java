@@ -42,6 +42,7 @@ public class GameService {
     public List<String> generateFourPossibleAnswers(String question, Map<String, String> continent) {
         List<String> possibleAnswers = new ArrayList<>();
         possibleAnswers.add(continent.get(question));
+        game.addRightAnswer(continent.get(question));
         List<String> allAnswers = continent.values().stream().toList();
         while (possibleAnswers.size() < 4) {
             String possibleAnswer = allAnswers.get(random.nextInt(continent.size() - 1));
@@ -115,7 +116,7 @@ public class GameService {
 
         userRepository.save(user);
         gameRepository.save(game);
-        return ResponseEntity.ok(new PlayingResponseDto(game.getScore(), game.getFailedQuestions(), game.getSucceededQuestions()));
+        return ResponseEntity.ok(new PlayingResponseDto(game.getScore(), game.getFailedQuestions(), game.getSucceededQuestions(), game.getRightAnswers()));
     }
 
     public ResponseEntity<List<GameDto>> getAllGamesHistory() {

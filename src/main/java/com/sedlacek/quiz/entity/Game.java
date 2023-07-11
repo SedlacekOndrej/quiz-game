@@ -32,6 +32,7 @@ public class Game extends EntityBase {
     private List<String> answers;
     private List<String> succeededQuestions = new ArrayList<>();
     private List<String> failedQuestions = new ArrayList<>();
+    private List<String> rightAnswers = new ArrayList<>();
     @ManyToOne
     private User user;
 
@@ -42,6 +43,8 @@ public class Game extends EntityBase {
     public void addSucceededQuestion(String question) {
         this.succeededQuestions.add(question);
     }
+
+    public void addRightAnswer(String answer) { this.rightAnswers.add(answer); }
 
     public void incrementScore() {
         this.score++;
