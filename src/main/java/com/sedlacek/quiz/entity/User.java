@@ -20,19 +20,28 @@ import java.util.List;
 public class User extends EntityBase {
 
     private String username;
+
     private String password;
+
     private String email;
+
     private int level = 1;
+
     private long exp = 0L;
+
     private int rightAnswers = 0;
+
     private int wrongAnswers = 0;
+
     private double percentage = 0.00;
+
     @OneToMany(mappedBy = "user")
     private List<Game> games;
 
     @ElementCollection
     private static final List<Integer> levelLimits = List.of(0, 100, 250, 450, 700, 1000, 1500, 2300, 3300, 4800,
             6800, 9300, 12300, 15800, 18800, 23000, 28000, 34000, 41500, 50000);
+
 
     public void addExp(long exp) {
         this.exp = this.exp + exp;

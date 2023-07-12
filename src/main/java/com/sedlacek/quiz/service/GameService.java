@@ -16,8 +16,11 @@ import java.util.*;
 
 @Service
 public class GameService {
+
     Random random = new Random();
+
     private Game game;
+
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
 
@@ -27,11 +30,14 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
+
     public List<String> generateTenQuestions(Map<String, String> continent) {
         List<String> generatedQuestions = new ArrayList<>();
         List<String> statesFromChosenContinent = continent.keySet().stream().toList();
+
         while (generatedQuestions.size() < 10) {
             String generatedState = statesFromChosenContinent.get(random.nextInt(continent.size() - 1));
+
             if (!generatedQuestions.contains(generatedState)) {
                 generatedQuestions.add(generatedState);
             }
@@ -41,16 +47,20 @@ public class GameService {
 
     public List<String> generateFourPossibleAnswers(String question, Map<String, String> continent) {
         List<String> possibleAnswers = new ArrayList<>();
+        List<String> allAnswers = continent.values().stream().toList();
+
         possibleAnswers.add(continent.get(question));
         game.addRightAnswer(continent.get(question));
-        List<String> allAnswers = continent.values().stream().toList();
+
         while (possibleAnswers.size() < 4) {
             String possibleAnswer = allAnswers.get(random.nextInt(continent.size() - 1));
+
             if (!possibleAnswers.contains(possibleAnswer)) {
                 possibleAnswers.add(possibleAnswer);
             }
         }
         Collections.shuffle(possibleAnswers);
+
         return possibleAnswers;
     }
 
@@ -58,29 +68,22 @@ public class GameService {
         return answer.equals(continent.get(question));
     }
 
-    public void playTheQuiz(AnswersDto answers, List<String> questions, User user, GameType gameType) {
-        game.setScore(0);
+    public void playTheQuiz(AnswersDto answers, List<String> questions, User user) {
         int index = 0;
+
+        game.setScore(0);
         game.setUser(user);
-        game.getFailedQuestions().clear();
-        game.getSucceededQuestions().clear();
+
         for (String question : questions) {
             if (answers.getAnswers().get(index) == null) {
                 answers.getAnswers().set(index, "");
             }
             if (rightAnswer(game.getContinent(), question, answers.getAnswers().get(index))) {
-                user.addRightAnswer();
-                switch (gameType) {
-                    case CAPITALS -> game.addSucceededQuestion(question);
-                    case FLAGS -> game.addSucceededQuestion(answers.getAnswers().get(index));
-                }
                 game.incrementScore();
+
+                user.addRightAnswer();
             } else {
                 user.addWrongAnswer();
-                switch (gameType) {
-                    case CAPITALS -> game.addFailedQuestion(question);
-                    case FLAGS -> game.addFailedQuestion(answers.getAnswers().get(index));
-                }
             }
             index++;
         }
@@ -89,12 +92,15 @@ public class GameService {
 
     public ResponseEntity<QuestionsDto> getQuestions(String continent, GameType gameType) {
         game = new Game();
+
         continentSelection(continent, gameType);
+
         game.setQuestions(generateTenQuestions(game.getContinent()));
         game.setPossibleAnswers(new ArrayList<>());
 
         for (String question: game.getQuestions()) {
             List<String> possibleAnswers = generateFourPossibleAnswers(question, game.getContinent());
+
             game.getPossibleAnswers().addAll(possibleAnswers);
         }
         return ResponseEntity.ok(new QuestionsDto(game.getQuestions(), game.getPossibleAnswers(), gameType));
@@ -102,9 +108,10 @@ public class GameService {
 
     public ResponseEntity<PlayingResponseDto> submitAnswers(QuestionsAndAnswersDto questionsAndAnswers) {
         GameType gameType = GameType.valueOf(questionsAndAnswers.getGameType());
-        continentSelection(questionsAndAnswers.getContinent(), gameType);
         User user = userRepository.findByUsername(questionsAndAnswers.getUsername());
-        playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getQuestions(), user, gameType);
+
+        continentSelection(questionsAndAnswers.getContinent(), gameType);
+        playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getQuestions(), user);
 
         game.setGameType(gameType);
         game.setGameTime(questionsAndAnswers.getGameTime());
@@ -116,23 +123,27 @@ public class GameService {
 
         userRepository.save(user);
         gameRepository.save(game);
-        return ResponseEntity.ok(new PlayingResponseDto(game.getScore(), game.getFailedQuestions(), game.getSucceededQuestions(), game.getRightAnswers()));
+
+        return ResponseEntity.ok(new PlayingResponseDto(game.getScore(), game.getRightAnswers()));
     }
 
     public ResponseEntity<List<GameDto>> getAllGamesHistory() {
         List<Game> games = gameRepository.findAllByOrderByCreatedDate();
-        List<GameDto> gameDtos = games.stream().map(gameEntity -> EntityBase.convert(gameEntity, GameDto.class)).toList();
+        List<GameDto> gameDtos = games.stream().map(entity -> EntityBase.convert(entity, GameDto.class)).toList();
+
         return ResponseEntity.ok(gameDtos);
     }
 
     public ResponseEntity<List<GameDto>> getUserGamesHistory(long userId) {
         List<Game> games = gameRepository.findAllByUserIdOrderByCreatedDate(userId);
-        List<GameDto> gameDtos = games.stream().map(gameEntity -> EntityBase.convert(gameEntity, GameDto.class)).toList();
+        List<GameDto> gameDtos = games.stream().map(entity -> EntityBase.convert(entity, GameDto.class)).toList();
+
         return ResponseEntity.ok(gameDtos);
     }
 
     private void continentSelection(String continent, GameType gameType) {
         if (gameType == GameType.CAPITALS) {
+
             switch (continent) {
                 case "europe" -> game.setContinent(Capitals.Europe);
                 case "asia" -> game.setContinent(Capitals.AsiaAndOceania);
@@ -142,6 +153,7 @@ public class GameService {
             }
         }
         if (gameType == GameType.FLAGS) {
+
             switch (continent) {
                 case "europe" -> game.setContinent(Flags.Europe);
                 case "asia" -> game.setContinent(Flags.AsiaAndOceania);

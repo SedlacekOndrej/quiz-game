@@ -15,6 +15,8 @@ import java.util.List;
 public class QuestionsDto {
   
     private List<String> questions;
+
     private List<String> possibleAnswers;
+
     private GameType gameType;
 }

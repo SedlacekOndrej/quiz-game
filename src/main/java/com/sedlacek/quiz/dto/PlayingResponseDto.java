@@ -14,7 +14,6 @@ import java.util.List;
 public class PlayingResponseDto {
 
     private long score;
-    private List<String> failedStates;
-    private List<String> succeededStates;
+
     private List<String> rightAnswers;
 }

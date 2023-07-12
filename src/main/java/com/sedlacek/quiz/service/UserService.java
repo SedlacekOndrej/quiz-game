@@ -25,6 +25,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+
     public ResponseEntity<ResponseMessageDto> registerNewUser(@NotNull UserDto userDTO) {
         if (userRepository.existsByUsername(userDTO.getUsername())) {
             return ResponseEntity.badRequest().body(new ResponseMessageDto("Účet s tímto uživatelským jménem již existuje"));
@@ -35,7 +36,9 @@ public class UserService {
         }
 
         User user = EntityBase.convert(userDTO, User.class);
+
         user.setPassword(encoder.encode(user.getPassword()));
+
         userRepository.save(user);
 
         return ResponseEntity.ok(new ResponseMessageDto("Uživatel " + userDTO.getUsername() + " úspěšně zaregistrován"));

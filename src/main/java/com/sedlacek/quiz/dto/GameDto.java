@@ -15,11 +15,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameDto implements Serializable {
+
     private OffsetDateTime createdDate;
+
     private GameType gameType;
+
     private int score;
+
     private int gameTime;
+
     private List<String> questions;
+
     private List<String> possibleAnswers;
+
     private List<String> answers;
 }

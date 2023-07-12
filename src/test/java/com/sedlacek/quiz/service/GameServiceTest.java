@@ -96,15 +96,9 @@ class GameServiceTest {
         AnswersDto answers = new AnswersDto("Bratislava", "Berlín", "Varšava", "Řím", "Paříž", "Madrid",
                 "Lisabon", "Dublin", "Záhřeb", "Praha");
 
-        gameService.playTheQuiz(answers, questions, user, GameType.CAPITALS);
+        gameService.playTheQuiz(answers, questions, user);
 
         assertEquals(9, game.getScore());
-
-        assertEquals(9, game.getSucceededQuestions().size());
-
-        assertEquals(1, game.getFailedQuestions().size());
-
-        assertEquals("Švýcarsko", game.getFailedQuestions().get(0));
 
         assertEquals(90, user.getExp());
     }
@@ -125,10 +119,6 @@ class GameServiceTest {
         assert playingResponse != null;
 
         assertEquals(6, playingResponse.getScore());
-
-        assertEquals(List.of("Slovensko", "Německo", "Polsko", "Itálie", "Francie", "Španělsko"), playingResponse.getSucceededStates());
-
-        assertEquals(List.of("Portugalsko", "Irsko", "Chorvatsko", "Švýcarsko"), playingResponse.getFailedStates());
     }
 
 }

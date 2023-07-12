@@ -14,11 +14,14 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @SuppressWarnings("unused")
 public class UserController {
+
     private final UserService userService;
+
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
 
     @PostMapping("/registration")
     public ResponseEntity<ResponseMessageDto> registerUser(@RequestBody UserDto userDto) {

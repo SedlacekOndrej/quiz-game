@@ -23,26 +23,26 @@ import java.util.Map;
 public class Game extends EntityBase {
 
     private GameType gameType;
+
     @Transient
     private Map<String, String> continent;
+
     private int score;
+
     private int gameTime;
+
     private List<String> questions;
+
     private List<String> possibleAnswers;
+
     private List<String> answers;
-    private List<String> succeededQuestions = new ArrayList<>();
-    private List<String> failedQuestions = new ArrayList<>();
+
+    @Transient
     private List<String> rightAnswers = new ArrayList<>();
+
     @ManyToOne
     private User user;
 
-    public void addFailedQuestion(String question) {
-        this.failedQuestions.add(question);
-    }
-
-    public void addSucceededQuestion(String question) {
-        this.succeededQuestions.add(question);
-    }
 
     public void addRightAnswer(String answer) { this.rightAnswers.add(answer); }
 

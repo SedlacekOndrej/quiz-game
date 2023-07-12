@@ -16,10 +16,13 @@ import java.time.OffsetDateTime;
 public abstract class EntityBase implements Serializable {
 
     private static final ModelMapper mapper = new ModelMapper();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private final OffsetDateTime createdDate = OffsetDateTime.now();
+
 
     public static <T, E> E convert(T source, Class<E> destinationClass) {
         return mapper.map(source, destinationClass);

@@ -16,11 +16,14 @@ import java.util.List;
 @RequestMapping("/api/game")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class GameController {
+
     private final GameService gameService;
+
 
     public GameController(GameService gameService) {
         this.gameService = gameService;
     }
+
 
     @GetMapping("/{continent}")
     public ResponseEntity<QuestionsDto> getQuestions(@PathVariable (name = "continent") String continent,
