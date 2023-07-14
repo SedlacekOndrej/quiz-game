@@ -22,10 +22,10 @@ import java.util.Map;
 @AllArgsConstructor
 public class Game extends EntityBase {
 
-    private GameType gameType;
-
     @Transient
     private Map<String, String> continent;
+
+    private GameType gameType;
 
     private int score;
 
@@ -37,7 +37,6 @@ public class Game extends EntityBase {
 
     private List<String> answers;
 
-    @Transient
     private List<String> rightAnswers = new ArrayList<>();
 
     @ManyToOne

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-    List<Game> findAllByOrderByCreatedDate();
+    List<Game> findAllByOrderByScoreDescGameTimeAsc();
 
-    List<Game> findAllByUserIdOrderByCreatedDate(long userId);
+    List<Game> findAllByUserIdOrderByScoreDescGameTimeAsc(long userId);
 }

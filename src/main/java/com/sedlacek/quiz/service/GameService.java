@@ -128,14 +128,14 @@ public class GameService {
     }
 
     public ResponseEntity<List<GameDto>> getAllGamesHistory() {
-        List<Game> games = gameRepository.findAllByOrderByCreatedDate();
+        List<Game> games = gameRepository.findAllByOrderByScoreDescGameTimeAsc();
         List<GameDto> gameDtos = games.stream().map(entity -> EntityBase.convert(entity, GameDto.class)).toList();
 
         return ResponseEntity.ok(gameDtos);
     }
 
     public ResponseEntity<List<GameDto>> getUserGamesHistory(long userId) {
-        List<Game> games = gameRepository.findAllByUserIdOrderByCreatedDate(userId);
+        List<Game> games = gameRepository.findAllByUserIdOrderByScoreDescGameTimeAsc(userId);
         List<GameDto> gameDtos = games.stream().map(entity -> EntityBase.convert(entity, GameDto.class)).toList();
 
         return ResponseEntity.ok(gameDtos);
