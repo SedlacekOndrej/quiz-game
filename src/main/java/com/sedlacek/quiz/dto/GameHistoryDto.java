@@ -14,8 +14,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameDto implements Serializable {
-
+public class GameHistoryDto implements Serializable {
+    private long id;
     private OffsetDateTime createdDate;
 
     private String continentName;
@@ -33,4 +33,8 @@ public class GameDto implements Serializable {
     private List<String> answers;
 
     private List<String> rightAnswers;
+
+    private String username;
+
+    private long userId;
 }

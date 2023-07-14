@@ -127,9 +127,18 @@ public class GameService {
         return ResponseEntity.ok(new PlayingResponseDto(game.getScore(), game.getRightAnswers()));
     }
 
-    public ResponseEntity<List<GameDto>> getAllGamesHistory() {
+    public ResponseEntity<List<GameHistoryDto>> getAllGamesHistory() {
         List<Game> games = gameRepository.findAllByOrderByScoreDescGameTimeAsc();
-        List<GameDto> gameDtos = games.stream().map(entity -> EntityBase.convert(entity, GameDto.class)).toList();
+        List<GameHistoryDto> gameDtos = games.stream().map(entity -> EntityBase.convert(entity, GameDto.class)).toList();
+
+        for (GameHistoryDto gameDto: gameDtos) {
+            for (Game gameEntity: games) {
+                if (gameDto.getId() == gameEntity.getId()) {
+                    gameDto.setUsername(gameEntity.getUser().getUsername());
+                    gameDto.setUserId(gameEntity.getUser().getId());
+                }
+            }
+        }
 
         return ResponseEntity.ok(gameDtos);
     }
@@ -142,6 +151,8 @@ public class GameService {
     }
 
     private void continentSelection(String continent, GameType gameType) {
+        game.setContinentName(continent);
+
         if (gameType == GameType.CAPITALS) {
 
             switch (continent) {

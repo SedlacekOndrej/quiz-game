@@ -1,9 +1,6 @@
 package com.sedlacek.quiz.controller;
 
-import com.sedlacek.quiz.dto.GameDto;
-import com.sedlacek.quiz.dto.PlayingResponseDto;
-import com.sedlacek.quiz.dto.QuestionsDto;
-import com.sedlacek.quiz.dto.QuestionsAndAnswersDto;
+import com.sedlacek.quiz.dto.*;
 import com.sedlacek.quiz.model.GameType;
 import com.sedlacek.quiz.service.GameService;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +34,7 @@ public class GameController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<List<GameDto>> getAllGamesHistory() {
+    public ResponseEntity<List<GameHistoryDto>> getAllGamesHistory() {
         return gameService.getAllGamesHistory();
     }
 

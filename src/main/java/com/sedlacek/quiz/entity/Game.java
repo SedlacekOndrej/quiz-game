@@ -25,6 +25,8 @@ public class Game extends EntityBase {
     @Transient
     private Map<String, String> continent;
 
+    private String continentName;
+
     private GameType gameType;
 
     private int score;
