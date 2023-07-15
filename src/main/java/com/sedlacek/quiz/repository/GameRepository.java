@@ -8,6 +8,4 @@ import java.util.List;
 public interface GameRepository extends JpaRepository<Game, Long> {
 
     List<Game> findAllByOrderByScoreDescGameTimeAsc();
-
-    List<Game> findAllByUserIdOrderByScoreDescGameTimeAsc(long userId);
 }

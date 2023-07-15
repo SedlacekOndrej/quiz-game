@@ -129,23 +129,12 @@ public class GameService {
 
     public ResponseEntity<List<GameHistoryDto>> getAllGamesHistory() {
         List<Game> games = gameRepository.findAllByOrderByScoreDescGameTimeAsc();
-        List<GameHistoryDto> gameDtos = games.stream().map(entity -> EntityBase.convert(entity, GameHistoryDto.class)).toList();
-
-        for (GameHistoryDto gameDto: gameDtos) {
-            for (Game gameEntity: games) {
-                if (gameDto.getId() == gameEntity.getId()) {
-                    gameDto.setUsername(gameEntity.getUser().getUsername());
-                    gameDto.setUserId(gameEntity.getUser().getId());
-                }
-            }
-        }
-
-        return ResponseEntity.ok(gameDtos);
-    }
-
-    public ResponseEntity<List<GameDto>> getUserGamesHistory(long userId) {
-        List<Game> games = gameRepository.findAllByUserIdOrderByScoreDescGameTimeAsc(userId);
-        List<GameDto> gameDtos = games.stream().map(entity -> EntityBase.convert(entity, GameDto.class)).toList();
+        List<GameHistoryDto> gameDtos = games.stream().map(entity -> {
+            GameHistoryDto gameDto = EntityBase.convert(entity, GameHistoryDto.class);
+            gameDto.setUserId(entity.getUser().getId());
+            gameDto.setUsername(entity.getUser().getUsername());
+            return gameDto;
+        }).toList();
 
         return ResponseEntity.ok(gameDtos);
     }

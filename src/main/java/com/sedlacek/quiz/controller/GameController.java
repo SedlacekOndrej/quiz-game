@@ -37,9 +37,4 @@ public class GameController {
     public ResponseEntity<List<GameHistoryDto>> getAllGamesHistory() {
         return gameService.getAllGamesHistory();
     }
-
-    @GetMapping("/history/{id}")
-    public ResponseEntity<List<GameDto>> getUserGamesHistory(@PathVariable (name = "id") long userId) {
-        return gameService.getUserGamesHistory(userId);
-    }
 }
