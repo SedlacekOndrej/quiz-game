@@ -63,7 +63,7 @@ public class UserService {
     }
 
     public ResponseEntity<UserDto> getUserById(@NotNull long id) {
-        User user = userRepository.findById(id);
+        User user = userRepository.findById(id).orElseThrow((RuntimeException::new));
 
         return ResponseEntity.ok(EntityBase.convert(user, UserDto.class));
     }
