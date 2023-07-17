@@ -4,7 +4,6 @@ import com.sedlacek.quiz.dto.AnswersDto;
 import com.sedlacek.quiz.dto.PlayingResponseDto;
 import com.sedlacek.quiz.dto.QuestionsAndAnswersDto;
 import com.sedlacek.quiz.dto.QuestionsDto;
-import com.sedlacek.quiz.entity.Game;
 import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.model.Capitals;
 import com.sedlacek.quiz.model.GameType;
@@ -12,21 +11,26 @@ import com.sedlacek.quiz.repository.GameRepository;
 import com.sedlacek.quiz.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class GameServiceTest {
-    GameService gameService;
+
+    private UserRepository fakeUserRepository;
+
+    private GameService gameService;
 
     @BeforeEach
     public void init() {
-        UserRepository fakeUserRepository = Mockito.mock(UserRepository.class);
+        fakeUserRepository = mock(UserRepository.class);
 
-        GameRepository fakeGameRepository = Mockito.mock(GameRepository.class);
+        GameRepository fakeGameRepository = mock(GameRepository.class);
 
         gameService = new GameService(fakeUserRepository, fakeGameRepository);
     }
@@ -85,8 +89,6 @@ class GameServiceTest {
 
     @Test
     void playTheQuiz_GivenNineRightAnswers_ScoreIsNine() {
-        Game game = new Game();
-
         User user = new User("TestUser", "password123", "TestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
 
@@ -96,15 +98,17 @@ class GameServiceTest {
         AnswersDto answers = new AnswersDto("Bratislava", "Berlín", "Varšava", "Řím", "Paříž", "Madrid",
                 "Lisabon", "Dublin", "Záhřeb", "Praha");
 
-        gameService.playTheQuiz(answers, questions, user);
-
-        assertEquals(9, game.getScore());
+        gameService.playTheQuiz(answers, questions, user, Capitals.Europe);
 
         assertEquals(90, user.getExp());
     }
 
     @Test
     void submitAnswers_GivenSixRightAnswers_ScoreIsSix() {
+        User mockUser = mock(User.class);
+
+        when(fakeUserRepository.findByUsername(anyString())).thenReturn(mockUser);
+
         List<String> questions = List.of("Slovensko", "Německo", "Polsko", "Itálie", "Francie", "Španělsko",
                 "Portugalsko", "Irsko", "Chorvatsko", "Švýcarsko");
 

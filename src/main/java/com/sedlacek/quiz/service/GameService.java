@@ -68,7 +68,7 @@ public class GameService {
         return answer.equals(continent.get(question));
     }
 
-    public void playTheQuiz(AnswersDto answers, List<String> questions, User user) {
+    public void playTheQuiz(AnswersDto answers, List<String> questions, User user, Map<String,String> continent) {
         int index = 0;
 
         game.setScore(0);
@@ -78,7 +78,7 @@ public class GameService {
             if (answers.getAnswers().get(index) == null) {
                 answers.getAnswers().set(index, "");
             }
-            if (rightAnswer(game.getContinent(), question, answers.getAnswers().get(index))) {
+            if (rightAnswer(continent, question, answers.getAnswers().get(index))) {
                 game.incrementScore();
 
                 user.addRightAnswer();
@@ -90,16 +90,16 @@ public class GameService {
         user.addExp(game.getScore() * 10L);
     }
 
-    public ResponseEntity<QuestionsDto> getQuestions(String continent, GameType gameType) {
+    public ResponseEntity<QuestionsDto> getQuestions(String continentName, GameType gameType) {
         game = new Game();
 
-        continentSelection(continent, gameType);
+        Map<String,String> continent = continentSelection(continentName, gameType);
 
-        game.setQuestions(generateTenQuestions(game.getContinent()));
+        game.setQuestions(generateTenQuestions(continent));
         game.setPossibleAnswers(new ArrayList<>());
 
         for (String question: game.getQuestions()) {
-            List<String> possibleAnswers = generateFourPossibleAnswers(question, game.getContinent());
+            List<String> possibleAnswers = generateFourPossibleAnswers(question, continent);
 
             game.getPossibleAnswers().addAll(possibleAnswers);
         }
@@ -110,8 +110,8 @@ public class GameService {
         GameType gameType = GameType.valueOf(questionsAndAnswers.getGameType());
         User user = userRepository.findByUsername(questionsAndAnswers.getUsername());
 
-        continentSelection(questionsAndAnswers.getContinent(), gameType);
-        playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getQuestions(), user);
+        Map<String,String> continent = continentSelection(questionsAndAnswers.getContinent(), gameType);
+        playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getQuestions(), user, continent);
 
         game.setGameType(gameType);
         game.setGameTime(questionsAndAnswers.getGameTime());
@@ -139,28 +139,49 @@ public class GameService {
         return ResponseEntity.ok(gameDtos);
     }
 
-    private void continentSelection(String continent, GameType gameType) {
+    private Map<String,String> continentSelection(String continent, GameType gameType) {
         game.setContinentName(continent);
 
         if (gameType == GameType.CAPITALS) {
 
             switch (continent) {
-                case "europe" -> game.setContinent(Capitals.Europe);
-                case "asia" -> game.setContinent(Capitals.AsiaAndOceania);
-                case "america" -> game.setContinent(Capitals.NorthAndSouthAmerica);
-                case "africa" -> game.setContinent(Capitals.Africa);
-                default -> game.setContinent(new HashMap<>());
+                case "europe" -> {
+                    return Capitals.Europe;
+                }
+                case "asia" -> {
+                    return Capitals.AsiaAndOceania;
+                }
+                case "america" -> {
+                    return Capitals.NorthAndSouthAmerica;
+                }
+                case "africa" -> {
+                    return Capitals.Africa;
+                }
+                default -> {
+                    return new HashMap<>();
+                }
             }
         }
         if (gameType == GameType.FLAGS) {
 
             switch (continent) {
-                case "europe" -> game.setContinent(Flags.Europe);
-                case "asia" -> game.setContinent(Flags.AsiaAndOceania);
-                case "america" -> game.setContinent(Flags.NorthAndSouthAmerica);
-                case "africa" -> game.setContinent(Flags.Africa);
-                default -> game.setContinent(new HashMap<>());
+                case "europe" -> {
+                    return Flags.Europe;
+                }
+                case "asia" -> {
+                    return Flags.AsiaAndOceania;
+                }
+                case "america" -> {
+                    return Flags.NorthAndSouthAmerica;
+                }
+                case "africa" -> {
+                    return Flags.Africa;
+                }
+                default -> {
+                    return new HashMap<>();
+                }
             }
         }
+        return new HashMap<>();
     }
 }

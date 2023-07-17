@@ -8,7 +8,6 @@ import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,10 +16,12 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
@@ -32,7 +33,7 @@ class UserServiceTest {
 
     @BeforeEach
     public void init() {
-        fakeUserRepository = Mockito.mock(UserRepository.class);
+        fakeUserRepository = mock(UserRepository.class);
 
         userService = new UserService(fakeUserRepository);
 
@@ -135,7 +136,7 @@ class UserServiceTest {
     void getUserById_StatusOk() {
         User userEntity = EntityBase.convert(user, User.class);
 
-        when(fakeUserRepository.findById(any(Long.class))).thenReturn(userEntity);
+        when(fakeUserRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(userEntity));
 
         ResponseEntity<UserDto> response = userService.getUserById(user.getId());
 
