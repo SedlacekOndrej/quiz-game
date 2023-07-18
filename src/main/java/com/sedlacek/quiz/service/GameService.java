@@ -31,11 +31,11 @@ public class GameService {
     }
 
 
-    public List<String> generateTenQuestions(Map<String, String> continent) {
+    public List<String> generateQuestions(Map<String, String> continent, int numberOfQuestions) {
         List<String> generatedQuestions = new ArrayList<>();
         List<String> statesFromChosenContinent = continent.keySet().stream().toList();
 
-        while (generatedQuestions.size() < 10) {
+        while (generatedQuestions.size() < numberOfQuestions) {
             String generatedState = statesFromChosenContinent.get(random.nextInt(continent.size() - 1));
 
             if (!generatedQuestions.contains(generatedState)) {
@@ -90,12 +90,12 @@ public class GameService {
         user.addExp(game.getScore() * 10L);
     }
 
-    public ResponseEntity<QuestionsDto> getQuestions(String continentName, GameType gameType) {
+    public ResponseEntity<QuestionsDto> getQuestions(String continentName, GameType gameType, int numberOfQuestions) {
         game = new Game();
 
         Map<String,String> continent = continentSelection(continentName, gameType);
 
-        game.setQuestions(generateTenQuestions(continent));
+        game.setQuestions(generateQuestions(continent, numberOfQuestions));
         game.setPossibleAnswers(new ArrayList<>());
 
         for (String question: game.getQuestions()) {
