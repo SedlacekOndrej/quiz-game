@@ -19,7 +19,7 @@ public class QuestionsAndAnswersDto {
 
     private List<String> questions;
 
-    private AnswersDto answers;
+    private List<String> answers;
 
     private String gameType;
 

@@ -1,6 +1,5 @@
 package com.sedlacek.quiz.service;
 
-import com.sedlacek.quiz.dto.AnswersDto;
 import com.sedlacek.quiz.dto.PlayingResponseDto;
 import com.sedlacek.quiz.dto.QuestionsAndAnswersDto;
 import com.sedlacek.quiz.dto.QuestionsDto;
@@ -37,7 +36,7 @@ class GameServiceTest {
 
     @Test
     void generateTenQuestions_CountIsOk() {
-        List<String> questions = gameService.generateQuestions(Capitals.Europe);
+        List<String> questions = gameService.generateQuestions(Capitals.Europe, 10);
 
         assertEquals(10, questions.size());
     }
@@ -63,7 +62,7 @@ class GameServiceTest {
 
     @Test
     void getQuestions_CountOfQuestionsIsOk_And_ContainsCapitals_True() {
-        QuestionsDto questions = gameService.getQuestions("europe", GameType.CAPITALS).getBody();
+        QuestionsDto questions = gameService.getQuestions("europe", GameType.CAPITALS, 10).getBody();
 
         assert questions != null;
 
@@ -76,7 +75,7 @@ class GameServiceTest {
 
     @Test
     void getQuestions_CountOfQuestionsIsOk_And_ContainsFlags_True() {
-        QuestionsDto questions = gameService.getQuestions("europe", GameType.FLAGS).getBody();
+        QuestionsDto questions = gameService.getQuestions("europe", GameType.FLAGS, 10).getBody();
 
         assert questions != null;
 
@@ -95,7 +94,7 @@ class GameServiceTest {
         List<String> questions = List.of("Slovensko", "Německo", "Polsko", "Itálie", "Francie", "Španělsko",
                 "Portugalsko", "Irsko", "Chorvatsko", "Švýcarsko");
 
-        AnswersDto answers = new AnswersDto("Bratislava", "Berlín", "Varšava", "Řím", "Paříž", "Madrid",
+        List<String> answers = List.of("Bratislava", "Berlín", "Varšava", "Řím", "Paříž", "Madrid",
                 "Lisabon", "Dublin", "Záhřeb", "Praha");
 
         gameService.playTheQuiz(answers, questions, user, Capitals.Europe);
@@ -112,7 +111,7 @@ class GameServiceTest {
         List<String> questions = List.of("Slovensko", "Německo", "Polsko", "Itálie", "Francie", "Španělsko",
                 "Portugalsko", "Irsko", "Chorvatsko", "Švýcarsko");
 
-        AnswersDto answers = new AnswersDto("Bratislava", "Berlín", "Varšava", "Řím", "Paříž", "Madrid",
+        List<String> answers = List.of("Bratislava", "Berlín", "Varšava", "Řím", "Paříž", "Madrid",
                 "Brusel", "Oslo", "Helsinki", "Praha");
 
         QuestionsAndAnswersDto questionsAndAnswers = new QuestionsAndAnswersDto("TestUser", "europe",

@@ -68,17 +68,17 @@ public class GameService {
         return answer.equals(continent.get(question));
     }
 
-    public void playTheQuiz(AnswersDto answers, List<String> questions, User user, Map<String,String> continent) {
+    public void playTheQuiz(List<String> answers, List<String> questions, User user, Map<String,String> continent) {
         int index = 0;
 
         game.setScore(0);
         game.setUser(user);
 
         for (String question : questions) {
-            if (answers.getAnswers().get(index) == null) {
-                answers.getAnswers().set(index, "");
+            if (answers.get(index) == null) {
+                answers.set(index, "");
             }
-            if (rightAnswer(continent, question, answers.getAnswers().get(index))) {
+            if (rightAnswer(continent, question, answers.get(index))) {
                 game.incrementScore();
 
                 user.addRightAnswer();
@@ -115,7 +115,7 @@ public class GameService {
 
         game.setGameType(gameType);
         game.setGameTime(questionsAndAnswers.getGameTime());
-        game.setAnswers(questionsAndAnswers.getAnswers().getAnswers());
+        game.setAnswers(questionsAndAnswers.getAnswers());
 
         user.countPercentage();
         user.levelCheck();
