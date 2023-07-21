@@ -35,10 +35,12 @@ class GameServiceTest {
     }
 
     @Test
-    void generateTenQuestions_CountIsOk() {
-        List<String> questions = gameService.generateQuestions(Capitals.Europe, 10);
+    void generateQuestions_CountIsOk() {
+        List<String> tenQuestions = gameService.generateQuestions(Capitals.Europe, 10);
+        List<String> twentyQuestions = gameService.generateQuestions(Capitals.Europe, 20);
 
-        assertEquals(10, questions.size());
+        assertEquals(10, tenQuestions.size());
+        assertEquals(20, twentyQuestions.size());
     }
 
     @Test
