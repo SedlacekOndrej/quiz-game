@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -18,7 +17,7 @@ public class QuestionsAndAnswersDto {
 
     private String continent;
 
-    private Set<String> questions;
+    private List<String> questions;
 
     private List<String> answers;
 

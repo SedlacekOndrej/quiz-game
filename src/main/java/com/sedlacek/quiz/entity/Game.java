@@ -1,10 +1,7 @@
 package com.sedlacek.quiz.entity;
 
 import com.sedlacek.quiz.model.GameType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,13 +28,17 @@ public class Game extends EntityBase {
 
     private int gameTime;
 
-    private Set<String> questions;
+    @Column(length = 1000)
+    private List<String> questions;
 
+    @Column(length = 4000)
     private List<String> possibleAnswers;
 
+    @Column(length = 1000)
     private List<String> answers;
 
-    private Set<String> rightAnswers = new HashSet<>();
+    @Column(length = 1000)
+    private List<String> rightAnswers = new ArrayList<>();
 
     @ManyToOne
     private User user;

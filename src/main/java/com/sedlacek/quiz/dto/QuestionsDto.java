@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class QuestionsDto {
   
-    private Set<String> questions;
+    private List<String> questions;
 
     private List<String> possibleAnswers;
 

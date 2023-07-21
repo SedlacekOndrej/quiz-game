@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -27,13 +26,13 @@ public class GameHistoryDto implements Serializable {
 
     private int gameTime;
 
-    private Set<String> questions;
+    private List<String> questions;
 
     private List<String> possibleAnswers;
 
     private List<String> answers;
 
-    private Set<String> rightAnswers;
+    private List<String> rightAnswers;
 
     private String username;
 
