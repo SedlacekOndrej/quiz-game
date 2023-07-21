@@ -38,16 +38,12 @@ public class GameService {
         return game;
     }
 
-    public List<String> generateQuestions(Map<String, String> continent, int numberOfQuestions) {
-        List<String> generatedQuestions = new ArrayList<>();
+    public Set<String> generateQuestions(Map<String, String> continent, int numberOfQuestions) {
+        Set<String> generatedQuestions = new HashSet<>();
         List<String> statesFromChosenContinent = continent.keySet().stream().toList();
 
         while (generatedQuestions.size() < numberOfQuestions) {
-            String generatedState = statesFromChosenContinent.get(random.nextInt(continent.size() - 1));
-
-            if (!generatedQuestions.contains(generatedState)) {
-                generatedQuestions.add(generatedState);
-            }
+            generatedQuestions.add(statesFromChosenContinent.get(random.nextInt(continent.size() - 1)));
         }
         return generatedQuestions;
     }
@@ -75,7 +71,7 @@ public class GameService {
         return answer.equals(continent.get(question));
     }
 
-    public void playTheQuiz(List<String> answers, List<String> questions, User user, Map<String,String> continent) {
+    public void playTheQuiz(List<String> answers, Set<String> questions, User user, Map<String,String> continent) {
         int index = 0;
 
         game = getGame();

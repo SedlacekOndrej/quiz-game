@@ -10,9 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Table(name = "games")
@@ -33,13 +31,13 @@ public class Game extends EntityBase {
 
     private int gameTime;
 
-    private List<String> questions;
+    private Set<String> questions;
 
     private List<String> possibleAnswers;
 
     private List<String> answers;
 
-    private List<String> rightAnswers = new ArrayList<>();
+    private Set<String> rightAnswers = new HashSet<>();
 
     @ManyToOne
     private User user;

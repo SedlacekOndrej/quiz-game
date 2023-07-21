@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,5 +16,5 @@ public class PlayingResponseDto {
 
     private long score;
 
-    private List<String> rightAnswers;
+    private Set<String> rightAnswers;
 }
