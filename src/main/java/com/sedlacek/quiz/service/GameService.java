@@ -148,6 +148,20 @@ public class GameService {
         return ResponseEntity.ok(gameDtos);
     }
 
+    public ResponseEntity<List<EncyclopediaDto>> getEncyclopedia() {
+        List<EncyclopediaDto> encyclopediaDtos = new ArrayList<>();
+
+        for (String flag : Flags.getAllFlagsAndStates().keySet()) {
+            String state = Flags.getAllFlagsAndStates().get(flag);
+            String capital = Capitals.getAllStatesAndCapitals().get(state);
+
+            encyclopediaDtos.add(new EncyclopediaDto(flag, state, capital));
+        }
+        encyclopediaDtos.sort(Comparator.comparing(EncyclopediaDto::getStateName));
+
+        return ResponseEntity.ok(encyclopediaDtos);
+    }
+
     private Map<String,String> continentSelection(String continent, GameType gameType) {
         game.setContinentName(continent);
 

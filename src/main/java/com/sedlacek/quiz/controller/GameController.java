@@ -38,4 +38,9 @@ public class GameController {
     public ResponseEntity<List<GameHistoryDto>> getAllGamesHistory() {
         return gameService.getAllGamesHistory();
     }
+
+    @GetMapping("/encyclopedia")
+    public ResponseEntity<List<EncyclopediaDto>> getEncyclopedia() {
+        return gameService.getEncyclopedia();
+    }
 }
