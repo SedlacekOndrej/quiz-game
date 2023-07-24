@@ -20,8 +20,8 @@ public class QuizApplication {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost("smtp.seznam.cz");
 		mailSender.setPort(465);
-		mailSender.setUsername("your-username");
-		mailSender.setPassword("your-password");
+		mailSender.setUsername("quizapp@seznam.cz");
+		mailSender.setPassword("Quizapp123*");
 
 		Properties props = mailSender.getJavaMailProperties();
 		props.put("mail.transport.protocol", "smtp");
