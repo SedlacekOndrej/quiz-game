@@ -8,6 +8,8 @@ import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.repository.UserRepository;
 import com.sun.istack.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +20,14 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final JavaMailSender javaMailSender;
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JavaMailSender javaMailSender) {
         this.userRepository = userRepository;
+        this.javaMailSender = javaMailSender;
     }
 
 
@@ -40,6 +45,8 @@ public class UserService {
         user.setPassword(encoder.encode(user.getPassword()));
 
         userRepository.save(user);
+
+        sendConfirmationEmail(user.getEmail(), user.getUsername());
 
         return ResponseEntity.ok(new ResponseMessageDto("Uživatel " + userDTO.getUsername() + " úspěšně zaregistrován"));
     }
@@ -66,6 +73,16 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow((RuntimeException::new));
 
         return ResponseEntity.ok(EntityBase.convert(user, UserDto.class));
+    }
+
+    private void sendConfirmationEmail(String email, String username) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setTo(email);
+        message.setSubject("Potvrzení registrace");
+        message.setText("Ahoj " + username + ",\n\nDěkujeme za registraci do hry Kvíz.\n\nS pozdravem,\nKvízMaster");
+
+        javaMailSender.send(message);
     }
 
 }
