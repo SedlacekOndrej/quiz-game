@@ -118,7 +118,7 @@ public class GameService {
 
     public ResponseEntity<PlayingResponseDto> submitAnswers(QuestionsAndAnswersDto questionsAndAnswers) {
         GameType gameType = GameType.valueOf(questionsAndAnswers.getGameType());
-        Continent continentName = Continent.valueOf(questionsAndAnswers.getContinent());
+        Continent continentName = Continent.valueOf(questionsAndAnswers.getContinent().toUpperCase());
         User user = userRepository.findByUsername(questionsAndAnswers.getUsername());
 
         Map<String,String> continent = continentSelection(continentName, gameType);
