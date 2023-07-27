@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.OffsetDateTime;
@@ -34,8 +35,9 @@ class UserServiceTest {
     @BeforeEach
     public void init() {
         fakeUserRepository = mock(UserRepository.class);
+        JavaMailSender fakeMailSender = mock(JavaMailSender.class);
 
-        userService = new UserService(fakeUserRepository);
+        userService = new UserService(fakeUserRepository, fakeMailSender);
 
         user = new UserDto(OffsetDateTime.now(), 1L, "TestUser", "password123", "TestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
