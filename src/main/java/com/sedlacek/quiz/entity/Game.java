@@ -1,5 +1,6 @@
 package com.sedlacek.quiz.entity;
 
+import com.sedlacek.quiz.model.Continent;
 import com.sedlacek.quiz.model.GameType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class Game extends EntityBase {
     @Transient
     private Map<String, String> continent;
 
-    private String continentName;
+    private Continent continentName;
 
     private GameType gameType;
 

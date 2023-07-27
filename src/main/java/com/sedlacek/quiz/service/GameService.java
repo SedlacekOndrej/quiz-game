@@ -4,6 +4,7 @@ import com.sedlacek.quiz.dto.*;
 import com.sedlacek.quiz.entity.EntityBase;
 import com.sedlacek.quiz.entity.Game;
 import com.sedlacek.quiz.entity.User;
+import com.sedlacek.quiz.model.Continent;
 import com.sedlacek.quiz.model.Flags;
 import com.sedlacek.quiz.model.GameType;
 import com.sedlacek.quiz.model.Capitals;
@@ -99,7 +100,7 @@ public class GameService {
         user.addExp(game.getScore() * 10L);
     }
 
-    public ResponseEntity<QuestionsDto> getQuestions(String continentName, GameType gameType, int numberOfQuestions) {
+    public ResponseEntity<QuestionsDto> getQuestions(Continent continentName, GameType gameType, int numberOfQuestions) {
         game = new Game();
 
         Map<String,String> continent = continentSelection(continentName, gameType);
@@ -117,9 +118,10 @@ public class GameService {
 
     public ResponseEntity<PlayingResponseDto> submitAnswers(QuestionsAndAnswersDto questionsAndAnswers) {
         GameType gameType = GameType.valueOf(questionsAndAnswers.getGameType());
+        Continent continentName = Continent.valueOf(questionsAndAnswers.getContinent());
         User user = userRepository.findByUsername(questionsAndAnswers.getUsername());
 
-        Map<String,String> continent = continentSelection(questionsAndAnswers.getContinent(), gameType);
+        Map<String,String> continent = continentSelection(continentName, gameType);
         playTheQuiz(questionsAndAnswers.getAnswers(), questionsAndAnswers.getQuestions(), user, continent);
 
         game.setGameType(gameType);
@@ -162,22 +164,22 @@ public class GameService {
         return ResponseEntity.ok(encyclopediaDtos);
     }
 
-    private Map<String,String> continentSelection(String continent, GameType gameType) {
+    private Map<String,String> continentSelection(Continent continent, GameType gameType) {
         getGame().setContinentName(continent);
 
         if (gameType == GameType.CAPITALS) {
 
             switch (continent) {
-                case "europe" -> {
+                case EUROPE -> {
                     return Capitals.Europe;
                 }
-                case "asia" -> {
+                case ASIA -> {
                     return Capitals.AsiaAndOceania;
                 }
-                case "america" -> {
+                case AMERICA -> {
                     return Capitals.NorthAndSouthAmerica;
                 }
-                case "africa" -> {
+                case AFRICA -> {
                     return Capitals.Africa;
                 }
                 default -> {
@@ -188,16 +190,16 @@ public class GameService {
         if (gameType == GameType.FLAGS) {
 
             switch (continent) {
-                case "europe" -> {
+                case EUROPE -> {
                     return Flags.Europe;
                 }
-                case "asia" -> {
+                case ASIA -> {
                     return Flags.AsiaAndOceania;
                 }
-                case "america" -> {
+                case AMERICA -> {
                     return Flags.NorthAndSouthAmerica;
                 }
-                case "africa" -> {
+                case AFRICA -> {
                     return Flags.Africa;
                 }
                 default -> {
