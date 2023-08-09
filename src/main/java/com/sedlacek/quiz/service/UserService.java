@@ -3,6 +3,7 @@ package com.sedlacek.quiz.service;
 import com.sedlacek.quiz.dto.*;
 import com.sedlacek.quiz.entity.EntityBase;
 import com.sedlacek.quiz.entity.User;
+import com.sedlacek.quiz.exception.ResourceNotFoundException;
 import com.sedlacek.quiz.repository.UserRepository;
 import com.sun.istack.NotNull;
 import org.springframework.http.ResponseEntity;
@@ -67,14 +68,14 @@ public class UserService {
         return ResponseEntity.badRequest().body(new LoginResponseDto(null, "Špatné uživatelské jméno nebo heslo"));
     }
 
-    public ResponseEntity<UserDto> getUserById(@NotNull long id) {
-        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+    public ResponseEntity<UserDto> getUserById(@NotNull long id) throws ResourceNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Uživatel s ID " + id + "nenalezen!"));
 
         return ResponseEntity.ok(EntityBase.convert(user, UserDto.class));
     }
 
-    public ResponseEntity<EditUserResponseDto> updateUser(long id, EditUserDto editUserDto) {
-        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+    public ResponseEntity<EditUserResponseDto> updateUser(long id, EditUserDto editUserDto) throws ResourceNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Uživatel s ID " + id + "nenalezen!"));
 
         if (encoder.matches(editUserDto.getPassword(), user.getPassword())) {
             user = EntityBase.convert(editUserDto.getUserDto(), User.class);
