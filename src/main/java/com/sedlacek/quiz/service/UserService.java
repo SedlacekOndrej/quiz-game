@@ -1,8 +1,6 @@
 package com.sedlacek.quiz.service;
 
-import com.sedlacek.quiz.dto.LoginResponseDto;
-import com.sedlacek.quiz.dto.ResponseMessageDto;
-import com.sedlacek.quiz.dto.UserDto;
+import com.sedlacek.quiz.dto.*;
 import com.sedlacek.quiz.entity.EntityBase;
 import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.repository.UserRepository;
@@ -70,9 +68,24 @@ public class UserService {
     }
 
     public ResponseEntity<UserDto> getUserById(@NotNull long id) {
-        User user = userRepository.findById(id).orElseThrow((RuntimeException::new));
+        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
 
         return ResponseEntity.ok(EntityBase.convert(user, UserDto.class));
+    }
+
+    public ResponseEntity<EditUserResponseDto> updateUser(long id, EditUserDto editUserDto) {
+        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+
+        if (user != null && encoder.matches(editUserDto.getPassword(), user.getPassword())) {
+            user = EntityBase.convert(editUserDto.getUserDto(), User.class);
+
+            userRepository.save(user);
+
+            return ResponseEntity.ok(new EditUserResponseDto(EntityBase.convert(user, UserDto.class), "Změna proběhla úspěšně!"));
+
+        } else {
+            return ResponseEntity.badRequest().body(new EditUserResponseDto(null, "Špatně zadané heslo!"));
+        }
     }
 
     private void sendConfirmationEmail(String email, String username) {
@@ -80,7 +93,7 @@ public class UserService {
 
         message.setTo(email);
         message.setSubject("Potvrzení registrace");
-        message.setText("Ahoj " + username + ",\n\nDěkujeme za registraci do hry Kvíz.\n\nS pozdravem,\nKvízMaster");
+        message.setText("Ahoj " + username + ",\n\nděkujeme za registraci do hry Kvíz.\n\nS pozdravem\nKvízMaster");
 
         javaMailSender.send(message);
     }
