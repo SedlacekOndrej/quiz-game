@@ -5,7 +5,8 @@ import java.util.Map;
 
 public class Flags {
 
-    private Flags() {}
+    private Flags() {
+    }
 
     public static final Map<String, String> Europe = Map.ofEntries(
             Map.entry("AL", "Albánie"),
@@ -198,8 +199,8 @@ public class Flags {
             Map.entry("ZW", "Zimbabwe")
     );
 
-    public static Map<String,String> getAllFlagsAndStates() {
-        Map<String,String> allFlagsAndStates = new HashMap<>();
+    public static Map<String, String> getAllFlagsAndStates() {
+        Map<String, String> allFlagsAndStates = new HashMap<>();
 
         allFlagsAndStates.putAll(Europe);
         allFlagsAndStates.putAll(AsiaAndOceania);

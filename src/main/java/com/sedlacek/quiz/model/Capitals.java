@@ -5,7 +5,8 @@ import java.util.Map;
 
 public class Capitals {
 
-    private Capitals() {}
+    private Capitals() {
+    }
 
     public static final Map<String, String> Europe = Map.ofEntries(
             Map.entry("Albánie", "Tirana"),
@@ -199,8 +200,8 @@ public class Capitals {
             Map.entry("Zimbabwe", "Harare")
     );
 
-    public static Map<String,String> getAllStatesAndCapitals() {
-        Map<String,String> allStatesAndCapitals = new HashMap<>();
+    public static Map<String, String> getAllStatesAndCapitals() {
+        Map<String, String> allStatesAndCapitals = new HashMap<>();
 
         allStatesAndCapitals.putAll(Europe);
         allStatesAndCapitals.putAll(AsiaAndOceania);

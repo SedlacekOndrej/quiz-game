@@ -24,9 +24,9 @@ public class GameController {
 
 
     @GetMapping("/{continent}")
-    public ResponseEntity<QuestionsDto> getQuestions(@PathVariable (name = "continent") String continent,
-                                                     @RequestParam (name = "type") String gameType,
-                                                     @RequestParam (name = "questions", required = false, defaultValue = "10") int numberOfQuestions) {
+    public ResponseEntity<QuestionsDto> getQuestions(@PathVariable(name = "continent") String continent,
+                                                     @RequestParam(name = "type") String gameType,
+                                                     @RequestParam(name = "questions", required = false, defaultValue = "10") int numberOfQuestions) {
         return gameService.getQuestions(Continent.valueOf(continent.toUpperCase()), GameType.valueOf(gameType.toUpperCase()), numberOfQuestions);
     }
 

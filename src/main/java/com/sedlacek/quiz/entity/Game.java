@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "games")
@@ -45,7 +47,9 @@ public class Game extends EntityBase {
     private User user;
 
 
-    public void addRightAnswer(String answer) { this.rightAnswers.add(answer); }
+    public void addRightAnswer(String answer) {
+        this.rightAnswers.add(answer);
+    }
 
     public void incrementScore() {
         this.score++;

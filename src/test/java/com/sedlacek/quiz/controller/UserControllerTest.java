@@ -27,8 +27,8 @@ public class UserControllerTest {
     @Test
     public void registerNewUser_StatusOk() throws Exception {
         mockMvc.perform(get("/api/user/registration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"TestUser\", \"password\": \"password123\", \"email\": \"TestUser@gmail.com\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"TestUser\", \"password\": \"password123\", \"email\": \"TestUser@gmail.com\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.message", is("Uživatel TestUser úspěšně zaregistrován")));

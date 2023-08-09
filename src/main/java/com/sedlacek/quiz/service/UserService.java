@@ -59,7 +59,7 @@ public class UserService {
     public ResponseEntity<LoginResponseDto> loginUser(@NotNull UserDto userDto) {
         User user = userRepository.findByUsername(userDto.getUsername());
 
-        if (user != null && encoder.matches(userDto.getPassword(), user.getPassword())) {
+        if (encoder.matches(userDto.getPassword(), user.getPassword())) {
             UserDto responseUser = EntityBase.convert(user, UserDto.class);
             return ResponseEntity.ok(new LoginResponseDto(responseUser, "Přihlášení proběhlo úspěšně"));
         }
@@ -76,7 +76,7 @@ public class UserService {
     public ResponseEntity<EditUserResponseDto> updateUser(long id, EditUserDto editUserDto) {
         User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
 
-        if (user != null && encoder.matches(editUserDto.getPassword(), user.getPassword())) {
+        if (encoder.matches(editUserDto.getPassword(), user.getPassword())) {
             user = EntityBase.convert(editUserDto.getUserDto(), User.class);
 
             userRepository.save(user);

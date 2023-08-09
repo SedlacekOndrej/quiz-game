@@ -56,10 +56,12 @@ public class User extends EntityBase {
     }
 
     public void countPercentage() {
-        setPercentage((double)rightAnswers / (rightAnswers + wrongAnswers) * 100);
+        setPercentage((double) rightAnswers / (rightAnswers + wrongAnswers) * 100);
     }
 
-    public void addGame(Game game) { this.games.add(game); }
+    public void addGame(Game game) {
+        this.games.add(game);
+    }
 
     public void levelCheck() {
         for (int i = levelLimits.size() - 1; i > 0; i--) {

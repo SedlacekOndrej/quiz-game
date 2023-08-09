@@ -7,7 +7,6 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import org.modelmapper.ModelMapper;
 
-
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 

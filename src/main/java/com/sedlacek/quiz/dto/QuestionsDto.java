@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionsDto {
-  
+
     private List<String> questions;
 
     private List<String> possibleAnswers;
