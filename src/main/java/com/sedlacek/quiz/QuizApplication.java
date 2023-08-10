@@ -27,7 +27,7 @@ public class QuizApplication {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true"); // Set to false for production
+        props.put("mail.smtp.ssl.enable", "true");
 
         return mailSender;
     }
