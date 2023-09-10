@@ -13,5 +13,5 @@ public class EditUserDto {
 
     private String password;
 
-    private UserDto userDto;
+    private UserDto user;
 }

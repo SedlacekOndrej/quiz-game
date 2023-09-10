@@ -1,6 +1,7 @@
 package com.sedlacek.quiz.controller;
 
 import com.sedlacek.quiz.dto.*;
+import com.sedlacek.quiz.exception.ResourceNotFoundException;
 import com.sedlacek.quiz.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,13 +38,22 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable(name = "id") long id) {
+    public ResponseEntity<UserDto> getUser(@PathVariable(name = "id") long id) throws ResourceNotFoundException {
         return userService.getUserById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EditUserResponseDto> updateUser(@PathVariable(name = "id") long id, @RequestBody EditUserDto editUserDto) {
+    public ResponseEntity<EditUserResponseDto> updateUser(@PathVariable(name = "id") long id,
+                                                          @RequestBody EditUserDto editUserDto)
+            throws ResourceNotFoundException {
         return userService.updateUser(id, editUserDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<EditUserResponseDto> deleteUser(@PathVariable(name = "id") long id,
+                                                          @RequestBody EditUserDto editUserDto)
+            throws ResourceNotFoundException {
+        return userService.deleteUser(id, editUserDto);
     }
 }
 

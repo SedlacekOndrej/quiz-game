@@ -6,6 +6,7 @@ import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.exception.ResourceNotFoundException;
 import com.sedlacek.quiz.repository.UserRepository;
 import com.sun.istack.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -78,7 +79,7 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Uživatel s ID " + id + "nenalezen!"));
 
         if (encoder.matches(editUserDto.getPassword(), user.getPassword())) {
-            user = EntityBase.convert(editUserDto.getUserDto(), User.class);
+            user = EntityBase.convert(editUserDto.getUser(), User.class);
 
             userRepository.save(user);
 
@@ -87,6 +88,18 @@ public class UserService {
         } else {
             return ResponseEntity.badRequest().body(new EditUserResponseDto(null, "Špatně zadané heslo!"));
         }
+    }
+
+    public ResponseEntity<EditUserResponseDto> deleteUser(long id, EditUserDto editUserDto) throws ResourceNotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Uživatel s ID " + id + " nenalezen!"));
+
+        if (encoder.matches(editUserDto.getPassword(), user.getPassword())) {
+            userRepository.delete(user);
+
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+
+        return ResponseEntity.badRequest().body(new EditUserResponseDto(null, "Špatně zadané heslo!"));
     }
 
     private void sendConfirmationEmail(String email, String username) {
