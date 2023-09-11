@@ -90,10 +90,10 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<EditUserResponseDto> deleteUser(long id, EditUserDto editUserDto) throws ResourceNotFoundException {
+    public ResponseEntity<EditUserResponseDto> deleteUser(long id, String password) throws ResourceNotFoundException {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Uživatel s ID " + id + " nenalezen!"));
 
-        if (encoder.matches(editUserDto.getPassword(), user.getPassword())) {
+        if (encoder.matches(password, user.getPassword())) {
             userRepository.delete(user);
 
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

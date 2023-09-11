@@ -45,15 +45,15 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<EditUserResponseDto> updateUser(@PathVariable(name = "id") long id,
                                                           @RequestBody EditUserDto editUserDto)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundException, IllegalAccessException {
         return userService.updateUser(id, editUserDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<EditUserResponseDto> deleteUser(@PathVariable(name = "id") long id,
-                                                          @RequestBody EditUserDto editUserDto)
+                                                          @RequestParam(name = "password") String password)
             throws ResourceNotFoundException {
-        return userService.deleteUser(id, editUserDto);
+        return userService.deleteUser(id, password);
     }
 }
 
