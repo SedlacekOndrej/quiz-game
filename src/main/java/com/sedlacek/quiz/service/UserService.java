@@ -75,11 +75,11 @@ public class UserService {
         return ResponseEntity.ok(EntityBase.convert(user, UserDto.class));
     }
 
-    public ResponseEntity<EditUserResponseDto> updateUser(long id, EditUserDto editUserDto) throws ResourceNotFoundException {
+    public ResponseEntity<EditUserResponseDto> updateUser(long id, EditUserDto editUserDto) throws ResourceNotFoundException, IllegalAccessException {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Uživatel s ID " + id + "nenalezen!"));
 
         if (encoder.matches(editUserDto.getPassword(), user.getPassword())) {
-            user = EntityBase.convert(editUserDto.getUser(), User.class);
+            EntityBase.update(editUserDto.getUser(), user);
 
             userRepository.save(user);
 
