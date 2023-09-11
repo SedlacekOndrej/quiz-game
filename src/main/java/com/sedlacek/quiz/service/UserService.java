@@ -75,12 +75,25 @@ public class UserService {
         return ResponseEntity.ok(EntityBase.convert(user, UserDto.class));
     }
 
-    public ResponseEntity<EditUserResponseDto> updateUser(long id, EditUserDto editUserDto) throws ResourceNotFoundException, IllegalAccessException {
+    public ResponseEntity<EditUserResponseDto> updateUser(long id, EditUserDto editUserDto) throws ResourceNotFoundException {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Uživatel s ID " + id + "nenalezen!"));
 
         if (encoder.matches(editUserDto.getPassword(), user.getPassword())) {
-            EntityBase.update(editUserDto.getUser(), user);
+            if (!user.getUsername().equals(editUserDto.getUser().getUsername())) {
+                if (userRepository.existsByUsername(editUserDto.getUser().getUsername())) {
+                    return ResponseEntity.badRequest().body(new EditUserResponseDto(null, "Účet s tímto uživatelským jménem již existuje"));
+                }
+                user.setUsername(editUserDto.getUser().getUsername());
 
+            } else if (!user.getPassword().equals(editUserDto.getUser().getPassword())) {
+                user.setPassword(encoder.encode(editUserDto.getUser().getPassword()));
+
+            } else if (!user.getEmail().equals(editUserDto.getUser().getEmail())) {
+                if (userRepository.existsByEmail(editUserDto.getUser().getEmail())) {
+                    return ResponseEntity.badRequest().body(new EditUserResponseDto(null, "Účet s tímto emailem již existuje"));
+                }
+                user.setEmail(editUserDto.getUser().getEmail());
+            }
             userRepository.save(user);
 
             return ResponseEntity.ok(new EditUserResponseDto(EntityBase.convert(user, UserDto.class), "Změna proběhla úspěšně!"));

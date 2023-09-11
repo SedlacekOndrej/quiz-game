@@ -45,7 +45,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<EditUserResponseDto> updateUser(@PathVariable(name = "id") long id,
                                                           @RequestBody EditUserDto editUserDto)
-            throws ResourceNotFoundException, IllegalAccessException {
+            throws ResourceNotFoundException {
         return userService.updateUser(id, editUserDto);
     }
 
