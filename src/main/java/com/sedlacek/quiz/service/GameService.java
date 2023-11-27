@@ -242,46 +242,26 @@ public class GameService {
     private Map<String, String> continentSelection(Continent continent, GameType gameType) {
         getGame().setContinentName(continent);
 
-        if (gameType == GameType.CAPITALS) {
+        Map<String, String> result = new HashMap<>();
 
-            switch (continent) {
-                case EUROPE -> {
-                    return Capitals.Europe;
+        switch (gameType) {
+            case CAPITALS -> {
+                switch (continent) {
+                    case EUROPE -> result = Capitals.Europe;
+                    case ASIA -> result = Capitals.AsiaAndOceania;
+                    case AMERICA -> result = Capitals.NorthAndSouthAmerica;
+                    case AFRICA -> result = Capitals.Africa;
                 }
-                case ASIA -> {
-                    return Capitals.AsiaAndOceania;
-                }
-                case AMERICA -> {
-                    return Capitals.NorthAndSouthAmerica;
-                }
-                case AFRICA -> {
-                    return Capitals.Africa;
-                }
-                default -> {
-                    return new HashMap<>();
+            }
+            case FLAGS -> {
+                switch (continent) {
+                    case EUROPE -> result = Flags.Europe;
+                    case ASIA -> result = Flags.AsiaAndOceania;
+                    case AMERICA -> result = Flags.NorthAndSouthAmerica;
+                    case AFRICA -> result = Flags.Africa;
                 }
             }
         }
-        if (gameType == GameType.FLAGS) {
-
-            switch (continent) {
-                case EUROPE -> {
-                    return Flags.Europe;
-                }
-                case ASIA -> {
-                    return Flags.AsiaAndOceania;
-                }
-                case AMERICA -> {
-                    return Flags.NorthAndSouthAmerica;
-                }
-                case AFRICA -> {
-                    return Flags.Africa;
-                }
-                default -> {
-                    return new HashMap<>();
-                }
-            }
+        return result;
         }
-        return new HashMap<>();
-    }
 }
