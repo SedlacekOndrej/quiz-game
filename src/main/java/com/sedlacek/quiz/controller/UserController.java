@@ -23,7 +23,7 @@ public class UserController {
 
 
     @PostMapping("/registration")
-    public ResponseEntity<ResponseMessageDto> registerUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> registerUser(@RequestBody UserDto userDto) {
         return userService.registerNewUser(userDto);
     }
 
@@ -43,14 +43,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EditUserResponseDto> updateUser(@PathVariable(name = "id") long id,
+    public ResponseEntity<String> updateUser(@PathVariable(name = "id") long id,
                                                           @RequestBody EditUserDto editUserDto)
             throws ResourceNotFoundException {
         return userService.updateUser(id, editUserDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<EditUserResponseDto> deleteUser(@PathVariable(name = "id") long id,
+    public ResponseEntity<String> deleteUser(@PathVariable(name = "id") long id,
                                                           @RequestParam(name = "password") String password)
             throws ResourceNotFoundException {
         return userService.deleteUser(id, password);

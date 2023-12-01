@@ -1,7 +1,6 @@
 package com.sedlacek.quiz.service;
 
 import com.sedlacek.quiz.dto.LoginResponseDto;
-import com.sedlacek.quiz.dto.ResponseMessageDto;
 import com.sedlacek.quiz.dto.UserDto;
 import com.sedlacek.quiz.entity.EntityBase;
 import com.sedlacek.quiz.entity.User;
@@ -46,11 +45,11 @@ class UserServiceTest {
 
     @Test
     void registerNewUser_StatusOk() {
-        ResponseEntity<ResponseMessageDto> response = userService.registerNewUser(user);
+        ResponseEntity<String> response = userService.registerNewUser(user);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        assertEquals("Uživatel " + user.getUsername() + " úspěšně zaregistrován", Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals("Uživatel " + user.getUsername() + " úspěšně zaregistrován", Objects.requireNonNull(response.getBody()));
     }
 
     @Test
@@ -60,11 +59,11 @@ class UserServiceTest {
 
         when(fakeUserRepository.existsByUsername(argThat(username -> username.equals(user.getUsername())))).thenReturn(true);
 
-        ResponseEntity<ResponseMessageDto> response = userService.registerNewUser(newUser);
+        ResponseEntity<String> response = userService.registerNewUser(newUser);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
-        assertEquals("Účet s tímto uživatelským jménem již existuje", Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals("Účet s tímto uživatelským jménem již existuje", Objects.requireNonNull(response.getBody()));
     }
 
     @Test
@@ -74,11 +73,11 @@ class UserServiceTest {
 
         when(fakeUserRepository.existsByEmail(argThat(email -> email.equals(user.getEmail())))).thenReturn(true);
 
-        ResponseEntity<ResponseMessageDto> response = userService.registerNewUser(newUser);
+        ResponseEntity<String> response = userService.registerNewUser(newUser);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
-        assertEquals("Účet s tímto emailem již existuje", Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals("Účet s tímto emailem již existuje", Objects.requireNonNull(response.getBody()));
     }
 
     @Test

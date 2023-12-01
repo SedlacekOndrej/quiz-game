@@ -32,10 +32,9 @@ public class GameService {
     }
 
     /**
-     * This method checks if there is already a <code>game</code> object created and returns it. If there isn't, the method creates
-     * a new one.
+     * Checks if there is already a <code>game</code> object created and returns it. If there isn't, a new one is created.
      *
-     * @return game if already exists, a new Game() otherwise
+     * @return game if already exists, a new game otherwise
      */
     private Game getGame() {
         if (game == null) {
@@ -45,12 +44,12 @@ public class GameService {
     }
 
     /**
-     * This method generates random states from chosen <code>continent</code>. The number of states depends on the selected number
+     * Generates random states from chosen <code>continent</code>. The number of states depends on the selected number
      * of questions.
      *
-     * @param continent         continent from which the states are generated
+     * @param continent         hashmap containing states as keys and capitals/flags as values from which the states are generated
      * @param numberOfQuestions number of questions which user wants to answer
-     * @return list of states as questions
+     * @return list of state names as questions
      */
     public List<String> generateQuestions(Map<String, String> continent, int numberOfQuestions) {
         List<String> generatedQuestions = new ArrayList<>();
@@ -67,12 +66,12 @@ public class GameService {
     }
 
     /**
-     * This method generates one right answer and three wrong answers to a state which is given as a parameter.
+     * Generates one right answer and three wrong answers to a state which is given as a parameter.
      * The answers are chosen from the selected <code>continent</code> and are returned in a shuffled list.
      *
-     * @param question  state which the answers need to be generated to
-     * @param continent continent from which the answers are generated
-     * @return one right answer and three wrong answers to a question in a list
+     * @param question  string value of the state name which the answers need to be generated to
+     * @param continent hashmap containing states as keys and capitals/flags as values from which the possible answers (values) are generated
+     * @return list containing one right answer and three wrong answers to a question
      */
     public List<String> generateFourPossibleAnswers(String question, Map<String, String> continent) {
         List<String> possibleAnswers = new ArrayList<>();
@@ -94,12 +93,12 @@ public class GameService {
     }
 
     /**
-     * This method takes a user's answer and compares it with right answer to a given question. If the user's answer
-     * is right, the method returns true, if not, then it returns false.
+     * Takes a user's answer and compares it with right answer to a given question. If the user's answer
+     * is right, it returns true, otherwise false.
      *
-     * @param continent selected continent from which are the questions and answers generated
-     * @param question  state as a question
-     * @param answer    user's answer
+     * @param continent hashmap containing states as keys and capitals/flags as values from which are the questions and answers generated
+     * @param question  string value of the state name as a question
+     * @param answer    string value of the user's answer
      * @return true if the answer is right, otherwise false
      */
     public boolean rightAnswer(Map<String, String> continent, String question, String answer) {
@@ -107,13 +106,13 @@ public class GameService {
     }
 
     /**
-     * This method compares questions and user's answers from selected <code>continent</code>. If the answer is right, the user
+     * Checks user's answers from selected <code>continent</code>. If the answer is right, the user
      * gains experience points which is added to its account at the end of the game.
      *
      * @param answers   list of states as questions
      * @param questions list of capitals or state names as answers
-     * @param user      logged user that plays the game
-     * @param continent selected continent from which are the questions and answers generated
+     * @param user      user object that plays the game
+     * @param continent hashmap containing states as keys and capitals/flags as values from which are the questions and answers generated
      */
     public void playTheQuiz(List<String> answers, List<String> questions, User user, Map<String, String> continent) {
         int index = 0;
@@ -130,9 +129,9 @@ public class GameService {
             if (rightAnswer(continent, question, answers.get(index))) {
                 game.incrementScore();
 
-                user.addRightAnswer();
+                user.incrementRightAnswers();
             } else {
-                user.addWrongAnswer();
+                user.incrementWrongAnswers();
             }
             index++;
         }
@@ -140,13 +139,13 @@ public class GameService {
     }
 
     /**
-     * This method sends to front-end what type of game is going to be played, selected number of questions, which are
+     * Sends information what type of game is going to be played, selected number of questions, which are
      * randomly generated states and four possible answers to each question, where always only one of them is right.
      *
-     * @param continentName     name of the continent from which the states are generated
-     * @param gameType          specifies what type of game is going to be played (o. g. capitals or flags)
-     * @param numberOfQuestions specifies the number of generated questions
-     * @return generated questions, four possible answers to each of them and type of the game
+     * @param continentName     enum name of the continent from which the states are generated
+     * @param gameType          enum type of game is going to be played (capitals/flags)
+     * @param numberOfQuestions number of generated questions
+     * @return list of generated questions, list of four possible answers to each of them and enum type of the game
      */
     public ResponseEntity<QuestionsDto> getQuestions(Continent continentName, GameType gameType, int numberOfQuestions) {
         game = getGame();
@@ -165,13 +164,13 @@ public class GameService {
     }
 
     /**
-     * This method invokes <code>playTheQuiz</code> method and takes care of consequences. It counts success percentage of the user,
-     * check and count his/her level and add the game to the user's <code>game</code> history. Then the user and the <code>game</code> are saved
-     * to the database.
+     * Invokes <code>playTheQuiz</code> method and takes care of consequences. It counts success percentage of the user,
+     * check and count his/her level and add the game to the user's <code>game</code> history. Then the updated user
+     * and the <code>game</code> are saved to the database.
      *
-     * @param questionsAndAnswers contains information from front-end about the game - selected continent, game time,
-     *                            game type, questions, answers and name of the user who has played the game
-     * @return score which user has achieved and right answers to the questions
+     * @param questionsAndAnswers object that contains information from front-end part of the application about the game - selected continent,
+     *                            game time, game type, questions, answers and the user who has played the game
+     * @return score number which user has achieved and a list of right answers to the answered questions
      */
     public ResponseEntity<PlayingResponseDto> submitAnswers(QuestionsAndAnswersDto questionsAndAnswers) {
         GameType gameType = GameType.valueOf(questionsAndAnswers.getGameType());
@@ -185,7 +184,7 @@ public class GameService {
         game.setGameTime(questionsAndAnswers.getGameTime());
         game.setAnswers(questionsAndAnswers.getAnswers());
 
-        user.countPercentage();
+        user.calculatePercentage();
         user.levelCheck();
         user.addGame(game);
 
@@ -196,7 +195,7 @@ public class GameService {
     }
 
     /**
-     * This method selects all the games played from the database, converts it to DTO a returns it in Json format.
+     * Selects all the games played from the database, converts it to DTO a returns it.
      *
      * @return list of all games played by all users
      */
@@ -213,8 +212,7 @@ public class GameService {
     }
 
     /**
-     * This method gathers states from all continents, assign them corresponding flag and capital and returns it in Json
-     * format.
+     * Gathers states from all continents, assign them corresponding flag and capital and returns it.
      *
      * @return list of all state names, its flags and capitals
      */
@@ -233,12 +231,12 @@ public class GameService {
     }
 
     /**
-     * This method returns a <code>HashMap</code> with a states or flags as the keys and capitals or state names as the values
+     * Returns a <code>HashMap</code> with a states or flags as the keys and capitals or state names as the values
      * based on what type of <code>game</code> was chosen.
      *
-     * @param continent continent name as enum
-     * @param gameType  type of the game as enum
-     * @return selected continent hash map
+     * @param continent enum continent name
+     * @param gameType  enum type of the game
+     * @return hashmap containing states as keys and capitals/flags as values
      */
     private Map<String, String> continentSelection(Continent continent, GameType gameType) {
         getGame().setContinentName(continent);

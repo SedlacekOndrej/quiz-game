@@ -44,15 +44,15 @@ public class User extends EntityBase {
         this.exp = this.exp + exp;
     }
 
-    public void addRightAnswer() {
+    public void incrementRightAnswers() {
         rightAnswers++;
     }
 
-    public void addWrongAnswer() {
+    public void incrementWrongAnswers() {
         wrongAnswers++;
     }
 
-    public void countPercentage() {
+    public void calculatePercentage() {
         setPercentage((double) rightAnswers / (rightAnswers + wrongAnswers) * 100);
     }
 
