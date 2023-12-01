@@ -32,7 +32,7 @@ public class GameService {
     }
 
     /**
-     * This method checks if there is already a game object created and returns it. If there isn't, the method creates
+     * This method checks if there is already a <code>game</code> object created and returns it. If there isn't, the method creates
      * a new one.
      *
      * @return game if already exists, a new Game() otherwise
@@ -45,7 +45,7 @@ public class GameService {
     }
 
     /**
-     * This method generates random states from chosen continent. Number of states depends on the selected number
+     * This method generates random states from chosen <code>continent</code>. The number of states depends on the selected number
      * of questions.
      *
      * @param continent         continent from which the states are generated
@@ -68,7 +68,7 @@ public class GameService {
 
     /**
      * This method generates one right answer and three wrong answers to a state which is given as a parameter.
-     * The answers are chosen from the selected continent and are returned in a shuffled list.
+     * The answers are chosen from the selected <code>continent</code> and are returned in a shuffled list.
      *
      * @param question  state which the answers need to be generated to
      * @param continent continent from which the answers are generated
@@ -107,7 +107,7 @@ public class GameService {
     }
 
     /**
-     * This method compares questions and user's answers from selected continent. If the answer is right, the user
+     * This method compares questions and user's answers from selected <code>continent</code>. If the answer is right, the user
      * gains experience points which is added to its account at the end of the game.
      *
      * @param answers   list of states as questions
@@ -165,8 +165,8 @@ public class GameService {
     }
 
     /**
-     * This method invokes playTheQuiz method and takes care of consequences. It counts success percentage of the user,
-     * check and count its level and add the game to the user's game history. Then the user and the game are saved
+     * This method invokes <code>playTheQuiz</code> method and takes care of consequences. It counts success percentage of the user,
+     * check and count his/her level and add the game to the user's <code>game</code> history. Then the user and the <code>game</code> are saved
      * to the database.
      *
      * @param questionsAndAnswers contains information from front-end about the game - selected continent, game time,
@@ -233,7 +233,8 @@ public class GameService {
     }
 
     /**
-     * This method returns a hash map with a states or flags as the keys and capitals or state names as the values.
+     * This method returns a <code>HashMap</code> with a states or flags as the keys and capitals or state names as the values
+     * based on what type of <code>game</code> was chosen.
      *
      * @param continent continent name as enum
      * @param gameType  type of the game as enum
