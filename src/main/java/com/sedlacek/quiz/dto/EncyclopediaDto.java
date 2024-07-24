@@ -9,7 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseMessageDto {
+public class EncyclopediaDto {
 
-    private String message;
+    private String flagName;
+
+    private String stateName;
+
+    private String capitalName;
 }

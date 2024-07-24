@@ -6,17 +6,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionsDto {
+public class GameDto implements Serializable {
+
+    private OffsetDateTime createdDate;
+
+    private String continentName;
+
+    private GameType gameType;
+
+    private int score;
+
+    private int gameTime;
 
     private List<String> questions;
 
     private List<String> possibleAnswers;
 
-    private GameType gameType;
+    private List<String> answers;
+
+    private List<String> rightAnswers;
 }

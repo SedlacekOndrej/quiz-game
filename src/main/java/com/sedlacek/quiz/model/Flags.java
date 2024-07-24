@@ -1,10 +1,12 @@
 package com.sedlacek.quiz.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Flags {
 
-    private Flags() {}
+    private Flags() {
+    }
 
     public static final Map<String, String> Europe = Map.ofEntries(
             Map.entry("AL", "Albánie"),
@@ -196,4 +198,15 @@ public class Flags {
             Map.entry("ZM", "Zambie"),
             Map.entry("ZW", "Zimbabwe")
     );
+
+    public static Map<String, String> getAllFlagsAndStates() {
+        Map<String, String> allFlagsAndStates = new HashMap<>();
+
+        allFlagsAndStates.putAll(Europe);
+        allFlagsAndStates.putAll(AsiaAndOceania);
+        allFlagsAndStates.putAll(NorthAndSouthAmerica);
+        allFlagsAndStates.putAll(Africa);
+
+        return allFlagsAndStates;
+    }
 }

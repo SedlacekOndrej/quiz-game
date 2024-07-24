@@ -1,8 +1,7 @@
 package com.sedlacek.quiz.entity;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,46 +13,51 @@ import java.util.List;
 @Setter
 @Table(name = "users")
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends EntityBase {
 
     private String username;
+
     private String password;
+
     private String email;
-    private int level;
-    private long exp;
-    private int rightAnswers;
-    private int wrongAnswers;
-    private double percentage;
+
+    private int level = 1;
+
+    private long exp = 0L;
+
+    private int rightAnswers = 0;
+
+    private int wrongAnswers = 0;
+
+    private double percentage = 0.00;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Game> games;
 
     @ElementCollection
     private static final List<Integer> levelLimits = List.of(0, 100, 250, 450, 700, 1000, 1500, 2300, 3300, 4800,
             6800, 9300, 12300, 15800, 18800, 23000, 28000, 34000, 41500, 50000);
 
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.level = 1;
-        this.exp = 0L;
-        this.rightAnswers = 0;
-        this.wrongAnswers = 0;
-        this.percentage = 0.00;
-    }
 
     public void addExp(long exp) {
         this.exp = this.exp + exp;
     }
 
-    public void addRightAnswer() {
+    public void incrementRightAnswers() {
         rightAnswers++;
     }
 
-    public void addWrongAnswer() {
+    public void incrementWrongAnswers() {
         wrongAnswers++;
     }
 
-    public void countPercentage() {
-        setPercentage((double)rightAnswers / (rightAnswers + wrongAnswers) * 100);
+    public void calculatePercentage() {
+        setPercentage((double) rightAnswers / (rightAnswers + wrongAnswers) * 100);
+    }
+
+    public void addGame(Game game) {
+        this.games.add(game);
     }
 
     public void levelCheck() {

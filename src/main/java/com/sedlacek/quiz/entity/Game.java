@@ -1,14 +1,16 @@
 package com.sedlacek.quiz.entity;
 
+import com.sedlacek.quiz.model.Continent;
 import com.sedlacek.quiz.model.GameType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "games")
@@ -18,11 +20,38 @@ import java.util.List;
 @AllArgsConstructor
 public class Game extends EntityBase {
 
+    @Transient
+    private Map<String, String> continent;
+
+    private Continent continentName;
+
     private GameType gameType;
-    private User user;
+
     private int score;
+
     private int gameTime;
+
+    @Column(length = 1000)
     private List<String> questions;
+
+    @Column(length = 4000)
+    private List<String> possibleAnswers;
+
+    @Column(length = 1000)
     private List<String> answers;
 
+    @Column(length = 1000)
+    private List<String> rightAnswers = new ArrayList<>();
+
+    @ManyToOne
+    private User user;
+
+
+    public void addRightAnswer(String answer) {
+        this.rightAnswers.add(answer);
+    }
+
+    public void incrementScore() {
+        this.score++;
+    }
 }
