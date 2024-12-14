@@ -1,8 +1,13 @@
 package com.sedlacek.quiz.controller;
 
-import com.sedlacek.quiz.dto.*;
+import com.sedlacek.quiz.dto.EditUserDto;
+import com.sedlacek.quiz.dto.LoginResponseDto;
+import com.sedlacek.quiz.dto.UserDto;
+import com.sedlacek.quiz.entity.EntityBase;
+import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.exception.ResourceNotFoundException;
 import com.sedlacek.quiz.service.UserService;
+import com.sedlacek.quiz.utils.Constants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +18,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @SuppressWarnings("unused")
 public class UserController {
-
     private final UserService userService;
 
 
@@ -24,12 +28,19 @@ public class UserController {
 
     @PostMapping("/registration")
     public ResponseEntity<String> registerUser(@RequestBody UserDto userDto) {
-        return userService.registerNewUser(userDto);
+        String result = userService.registerNewUser(userDto);
+        if (result.contains(Constants.REGISTRATION_SUCCESSFUL)) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
     @GetMapping("/leaderboards")
     public ResponseEntity<List<UserDto>> getLeaderboards() {
-        return userService.getAllUsersOrderByExp();
+        List<User> users = userService.getAllUsersOrderByExp();
+        List<UserDto> usersDto = EntityBase.convertAll(users, UserDto.class);
+        return ResponseEntity.ok(usersDto);
     }
 
     @PostMapping("/login")
@@ -39,21 +50,33 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable(name = "id") long id) throws ResourceNotFoundException {
-        return userService.getUserById(id);
+        User user = userService.getUserById(id);
+        UserDto userDto = EntityBase.convert(user, UserDto.class);
+        return ResponseEntity.ok(userDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(@PathVariable(name = "id") long id,
-                                                          @RequestBody EditUserDto editUserDto)
+                                                 @RequestBody EditUserDto editUserDto)
             throws ResourceNotFoundException {
-        return userService.updateUser(id, editUserDto);
+        String result = userService.updateUser(id, editUserDto);
+        if (Constants.CHANGE_SUCCESSFUL.equals(result)) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable(name = "id") long id,
-                                                          @RequestParam(name = "password") String password)
+                                                 @RequestParam(name = "password") String password)
             throws ResourceNotFoundException {
-        return userService.deleteUser(id, password);
+        String result = userService.deleteUser(id, password);
+        if (Constants.USER_DELETED.equals(result)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 }
 
