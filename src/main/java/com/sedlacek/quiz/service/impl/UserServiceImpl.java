@@ -37,19 +37,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String registerNewUser(@NotNull UserDto userDTO) {
-        validator.validate(userDTO);
-
-        Optional<String> errorMessages = validator.getMessages().stream().reduce((m1, m2) -> m1 + ", " + m2);
-
-        if (errorMessages.isPresent()) {
-            return errorMessages.get();
-        } else {
-            User user = EntityBase.convert(userDTO, User.class);
-            user.setPassword(encoder.encode(user.getPassword()));
-            userRepository.save(user);
-            sendConfirmationEmail(user.getEmail(), user.getUsername());
-            return Constants.USER + userDTO.getUsername() + Constants.REGISTRATION_SUCCESSFUL;
+        try {
+            validator.validate(userDTO);
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
         }
+
+        User user = EntityBase.convert(userDTO, User.class);
+        user.setPassword(encoder.encode(user.getPassword()));
+        userRepository.save(user);
+        sendConfirmationEmail(user.getEmail(), user.getUsername());
+        return Constants.USER + userDTO.getUsername() + Constants.REGISTRATION_SUCCESSFUL;
     }
 
     @Override

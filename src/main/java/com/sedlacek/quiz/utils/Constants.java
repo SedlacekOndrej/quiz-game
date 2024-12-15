@@ -15,6 +15,9 @@ public class Constants {
     public static final String NOT_FOUND = " nenalezen!";
     public static final String GAME_NOT_FOUND = "Hra nenalezena!";
     public static final String REGISTRATION_CONFIRMATION = "Potvrzení registrace";
+    public static final String EMPTY_USERNAME = "Uživatelské jméno je povinné pole!";
+    public static final String EMPTY_PASSWORD = "Heslo je povinné pole!";
+    public static final String EMPTY_EMAIL = "Email je povinné pole!";
 
     private Constants() {}
 }
