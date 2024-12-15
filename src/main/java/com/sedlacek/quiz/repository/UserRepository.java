@@ -2,13 +2,12 @@ package com.sedlacek.quiz.repository;
 
 import com.sedlacek.quiz.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Repository
+@Component
 public interface UserRepository extends JpaRepository<User, Long> {
-
     User findByUsername(String username);
 
     boolean existsByUsername(String username);

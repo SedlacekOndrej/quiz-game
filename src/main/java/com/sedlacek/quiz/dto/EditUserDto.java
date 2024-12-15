@@ -10,8 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditUserDto {
-
     private String password;
-
     private UserDto user;
 }

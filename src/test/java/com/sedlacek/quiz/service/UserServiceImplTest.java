@@ -4,9 +4,17 @@ import com.sedlacek.quiz.dto.LoginResponseDto;
 import com.sedlacek.quiz.dto.UserDto;
 import com.sedlacek.quiz.entity.EntityBase;
 import com.sedlacek.quiz.entity.User;
+import com.sedlacek.quiz.exception.ResourceNotFoundException;
 import com.sedlacek.quiz.repository.UserRepository;
+import com.sedlacek.quiz.service.impl.UserServiceImpl;
+import com.sedlacek.quiz.utils.Constants;
+import com.sedlacek.quiz.validator.UserValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,19 +33,23 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class UserServiceTest {
-    private UserRepository fakeUserRepository;
-
+@RunWith(MockitoJUnitRunner.class)
+class UserServiceImplTest {
+    @Mock
+    private UserServiceImpl userServiceImpl;
+    @InjectMocks
     private UserService userService;
-
+    private UserRepository fakeUserRepository;
+    private UserValidator fakeUserValidator;
     private UserDto user;
 
     @BeforeEach
     public void init() {
         fakeUserRepository = mock(UserRepository.class);
+        fakeUserValidator = mock(UserValidator.class);
         JavaMailSender fakeMailSender = mock(JavaMailSender.class);
 
-        userService = new UserService(fakeUserRepository, fakeMailSender);
+        userService = new UserServiceImpl(fakeUserRepository, fakeMailSender, fakeUserValidator);
 
         user = new UserDto(OffsetDateTime.now(), 1L, "TestUser", "password123", "TestUser@gmail.com",
                 1, 0L, 0, 0, 0.00, new ArrayList<>());
@@ -45,11 +57,9 @@ class UserServiceTest {
 
     @Test
     void registerNewUser_StatusOk() {
-        ResponseEntity<String> response = userService.registerNewUser(user);
+        String response = userService.registerNewUser(user);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        assertEquals("Uživatel " + user.getUsername() + " úspěšně zaregistrován", Objects.requireNonNull(response.getBody()));
+        assertEquals(Constants.USER + user.getUsername() + Constants.REGISTRATION_SUCCESSFUL, response);
     }
 
     @Test
@@ -59,11 +69,9 @@ class UserServiceTest {
 
         when(fakeUserRepository.existsByUsername(argThat(username -> username.equals(user.getUsername())))).thenReturn(true);
 
-        ResponseEntity<String> response = userService.registerNewUser(newUser);
+        String response = userService.registerNewUser(newUser);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-
-        assertEquals("Účet s tímto uživatelským jménem již existuje", Objects.requireNonNull(response.getBody()));
+        assertEquals(Constants.USERNAME_ALREADY_EXISTS, response);
     }
 
     @Test
@@ -73,11 +81,9 @@ class UserServiceTest {
 
         when(fakeUserRepository.existsByEmail(argThat(email -> email.equals(user.getEmail())))).thenReturn(true);
 
-        ResponseEntity<String> response = userService.registerNewUser(newUser);
+        String response = userService.registerNewUser(newUser);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-
-        assertEquals("Účet s tímto emailem již existuje", Objects.requireNonNull(response.getBody()));
+        assertEquals(Constants.EMAIL_ALREADY_EXISTS, response);
     }
 
     @Test
@@ -89,7 +95,7 @@ class UserServiceTest {
         userEntity.setUsername(user.getUsername());
         userEntity.setPassword(hashedPassword);
 
-        when(fakeUserRepository.findByUsername(any(String.class))).thenReturn(userEntity);
+        when(fakeUserRepository.findByUsername(user.getUsername())).thenReturn(userEntity);
 
         ResponseEntity<LoginResponseDto> response = userService.loginUser(user);
 
@@ -99,6 +105,8 @@ class UserServiceTest {
 
     @Test
     void loginUser_UserDoesNotExist_StatusBadRequest() {
+        when(fakeUserRepository.findByUsername("TestUser")).thenReturn(EntityBase.convert(user, User.class));
+
         ResponseEntity<LoginResponseDto> response = userService.loginUser(user);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -108,6 +116,8 @@ class UserServiceTest {
 
     @Test
     void loginUser_GivenWrongUsername_StatusBadRequest() {
+        when(fakeUserRepository.findByUsername("NewTestUser")).thenReturn(EntityBase.convert(user, User.class));
+
         userService.registerNewUser(user);
 
         UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "NewTestUser", "password123", "TestUser@gmail.com",
@@ -122,6 +132,8 @@ class UserServiceTest {
 
     @Test
     void loginUser_GivenWrongPassword_StatusBadRequest() {
+        when(fakeUserRepository.findByUsername("TestUser")).thenReturn(EntityBase.convert(user, User.class));
+
         userService.registerNewUser(user);
 
         UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "TestUser", "password", "TestUser@gmail.com",
@@ -135,51 +147,43 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserById_StatusOk() {
+    void getUserById_StatusOk() throws ResourceNotFoundException {
         User userEntity = EntityBase.convert(user, User.class);
 
         when(fakeUserRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(userEntity));
 
-        ResponseEntity<UserDto> response = userService.getUserById(user.getId());
+        User user = userService.getUserById(this.user.getId());
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        assertEquals("TestUser", Objects.requireNonNull(response.getBody()).getUsername());
+        assertEquals("TestUser", Objects.requireNonNull(user).getUsername());
     }
 
     @Test
     void getAllUsersOrderByExp_Ok() {
-        UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "NewUser", "password456", "NewUser@gmail.com",
-                1, 10L, 0, 0, 0.00, new ArrayList<>());
+        UserDto newUser = new UserDto(OffsetDateTime.now(), 1L, "NewUser", "password456",
+                "NewUser@gmail.com", 1, 10L, 0, 0, 0.00, new ArrayList<>());
 
         userService.registerNewUser(user);
         userService.registerNewUser(newUser);
 
-        List<UserDto> expectedUsersDto = new ArrayList<>();
+        List<UserDto> expectedUsersDto = List.of(user, newUser);
 
-        expectedUsersDto.add(newUser);
-        expectedUsersDto.add(user);
-
-        List<User> expectedUsers = new ArrayList<>();
-
-        for (UserDto userDto : expectedUsersDto) {
-            expectedUsers.add(EntityBase.convert(userDto, User.class));
-        }
+        List<User> expectedUsers = EntityBase.convertAll(expectedUsersDto, User.class);
 
         when(fakeUserRepository.findAllByOrderByExpDesc()).thenReturn(expectedUsers);
 
-        List<UserDto> users = userService.getAllUsersOrderByExp().getBody();
+        List<User> users = userService.getAllUsersOrderByExp();
 
         assert users != null;
 
         assertEquals(2, users.size());
 
-        assertEquals("NewUser", users.get(0).getUsername());
+        assertEquals("TestUser", users.get(0).getUsername());
     }
 
     @Test
     void getAllUsersOrderByExp_ListIsEmpty_True() {
-        List<UserDto> users = userService.getAllUsersOrderByExp().getBody();
+        List<User> users = userService.getAllUsersOrderByExp();
 
         assert users != null;
 
