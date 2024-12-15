@@ -6,6 +6,7 @@ import com.sedlacek.quiz.dto.UserDto;
 import com.sedlacek.quiz.entity.EntityBase;
 import com.sedlacek.quiz.entity.User;
 import com.sedlacek.quiz.exception.ResourceNotFoundException;
+import com.sedlacek.quiz.exception.ValidationException;
 import com.sedlacek.quiz.repository.UserRepository;
 import com.sedlacek.quiz.service.UserService;
 import com.sedlacek.quiz.utils.Constants;
@@ -18,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class UserServiceImpl implements UserService {
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public String registerNewUser(@NotNull UserDto userDTO) {
         try {
             validator.validate(userDTO);
-        } catch (IllegalArgumentException e) {
+        } catch (ValidationException e) {
             return e.getMessage();
         }
 
